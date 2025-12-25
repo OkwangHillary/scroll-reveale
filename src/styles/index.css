@@ -1,0 +1,41 @@
+#app {
+  position: relative;
+  z-index: 1;
+}
+
+#webgl {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  top: 0;
+  left: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 3vmax 0;
+  gap: 3vmax;
+}
+
+.grid {
+  display: grid;
+  padding: 6vmax;
+  gap: 3vmax;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.container img {
+  max-width: 100%;
+  opacity: 0;
+}
+
+.details {
+  max-width: 100%;
+  padding: 0 6vmax;
+}
+
+.details img {
+  width: 100%;
+  height: auto;
+}

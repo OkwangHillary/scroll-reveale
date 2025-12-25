@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro"
+
+interface Media {
+  url: string
+  index: number
+}
+
+export const getStaticPaths = async () => {
+  const medias: Media[] = [
+    {
+      url: "/assets/i1.jpg",
+      index: 1,
+    },
+    {
+      url: "/assets/i2.jpg",
+      index: 2,
+    },
+    {
+      url: "/assets/i3.jpg",
+      index: 3,
+    },
+    {
+      url: "/assets/i4.jpg",
+      index: 4,
+    },
+  ]
+
+  return medias.map((media, index) => {
+    return {
+      params: { index: media.index.toString() },
+      props: {
+        media,
+      },
+    }
+  })
+}
+
+const { media } = Astro.props
+---
+
+<Layout uid={`detail-${media.index}`}>
+  <div class="details">
+    <img src={media.url} alt={`Image ${media.index}`} />
+  </div>
+</Layout>
