@@ -1,7 +1,7 @@
 ---
 import "../styles/index.css"
 
-const { uid } = Astro.props
+const { uid, template } = Astro.props
 ---
 
 <!doctype html>
@@ -15,7 +15,7 @@ const { uid } = Astro.props
   </head>
   <body data-barba="wrapper">
     <div id="app" data-barba="container" data-barba-namespace={uid}>
-      <div id="smooth-content">
+      <div id="smooth-content" data-page-template={template}>
         <slot />
       </div>
     </div>

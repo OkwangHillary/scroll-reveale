@@ -14,7 +14,7 @@ export default class Canvas {
   dimensions: Dimensions
   time: number
   clock: THREE.Clock
-  medias: Media[]
+  medias: (Media | null)[] | null
 
   constructor() {
     this.element = document.getElementById("webgl") as HTMLCanvasElement
@@ -26,7 +26,6 @@ export default class Canvas {
     this.createRenderer()
     this.setSizes()
     this.addEventListeners()
-    this.createMedias()
   }
 
   createScene() {
@@ -94,8 +93,8 @@ export default class Canvas {
     this.renderer.setPixelRatio(this.dimensions.pixelRatio)
     this.renderer.setSize(this.dimensions.width, this.dimensions.height)
 
-    this.medias.forEach((media) => {
-      media.onResize(this.sizes)
+    this.medias?.forEach((media) => {
+      media?.onResize(this.sizes)
     })
   }
 
@@ -113,6 +112,8 @@ export default class Canvas {
   }
 
   createMedias() {
+    this.medias = []
+
     const images = document.querySelectorAll("img")
     images.forEach((image) => {
       const media = new Media({
@@ -121,15 +122,31 @@ export default class Canvas {
         sizes: this.sizes,
       })
 
-      this.medias.push(media)
+      this.medias?.push(media)
     })
+
+    this.medias?.forEach((media) => {
+      media?.observe()
+    })
+  }
+
+  onPageChange(template: string) {
+    if (template === "home") {
+      this.createMedias()
+    } else {
+      this.medias?.forEach((media) => {
+        media?.destroy()
+        media = null
+      })
+      this.medias = null
+    }
   }
 
   render(scroll: number) {
     this.time = this.clock.getElapsedTime()
 
-    this.medias.forEach((media) => {
-      media.updateScroll(scroll)
+    this.medias?.forEach((media) => {
+      media?.updateScroll(scroll)
     })
 
     this.renderer.render(this.scene, this.camera)

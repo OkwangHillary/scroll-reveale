@@ -39,7 +39,7 @@ export const getStaticPaths = async () => {
 const { media } = Astro.props
 ---
 
-<Layout uid={`detail-${media.index}`}>
+<Layout uid={`detail-${media.index}`} template="detail">
   <div class="details">
     <img src={media.url} alt={`Image ${media.index}`} />
   </div>

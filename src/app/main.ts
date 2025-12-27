@@ -12,10 +12,15 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 class App {
   canvas: Canvas
   scroll: Scroll
+  template: "home" | "detail"
 
   constructor() {
     this.scroll = new Scroll()
     this.canvas = new Canvas()
+
+    this.template = this.getCurrentTemplate()
+
+    this.canvas.onPageChange(this.template)
 
     barba.init({
       prefetchIgnore: true,
@@ -32,8 +37,17 @@ class App {
               })
             })
           },
-          beforeEnter: () => {},
+          beforeEnter: () => {
+            this.scroll.reset()
+            this.scroll.destroy()
+          },
           after: () => {
+            this.scroll.init()
+
+            const template = this.getCurrentTemplate()
+            this.setTemplate(template)
+            this.canvas.onPageChange(this.template)
+
             return new Promise<void>((resolve) => {
               const tl = gsap.timeline()
 
@@ -49,8 +63,18 @@ class App {
     this.render()
   }
 
+  getCurrentTemplate() {
+    return document
+      .querySelector("[data-page-template]")
+      ?.getAttribute("data-page-template") as "home" | "detail"
+  }
+
+  setTemplate(template: string) {
+    this.template = template as "home" | "detail"
+  }
+
   render() {
-    const s = this.scroll.getScroll()
+    const s = this.scroll?.getScroll() || 0
 
     this.canvas.render(s)
 

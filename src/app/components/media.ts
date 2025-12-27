@@ -26,6 +26,7 @@ export default class Media {
   currentScroll: number
   lastScroll: number
   scrollSpeed: number
+  scrollTrigger: globalThis.ScrollTrigger
 
   constructor({ element, scene, sizes }: Props) {
     this.element = element
@@ -42,7 +43,6 @@ export default class Media {
     this.setNodeBounds()
     this.setMeshDimensions()
     this.setMeshPosition()
-
     this.setTexture()
 
     this.scene.add(this.mesh)
@@ -115,7 +115,6 @@ export default class Media {
           naturalWidth,
           naturalHeight
         )
-        this.observe()
       }
     )
   }
@@ -149,7 +148,7 @@ export default class Media {
   }
 
   observe() {
-    ScrollTrigger.create({
+    this.scrollTrigger = ScrollTrigger.create({
       trigger: this.element,
       start: "top bottom",
       end: "bottom top",
@@ -158,6 +157,13 @@ export default class Media {
       onLeave: () => this.onInvisible(),
       onLeaveBack: () => this.onInvisible(),
     })
+  }
+
+  destroy() {
+    this.scrollTrigger.kill()
+    this.scene.remove(this.mesh)
+    this.geometry.dispose()
+    this.material.dispose()
   }
 
   onResize(sizes: Size) {

@@ -1,13 +1,19 @@
 import { ScrollSmoother } from "gsap/ScrollSmoother"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 export default class Scroll {
   scroll: number
-  s: globalThis.ScrollSmoother
+  s: globalThis.ScrollSmoother | null
 
   constructor() {
+    this.init()
+  }
+
+  init() {
     this.scroll = 0
 
-    const content = document.getElementById("app") as HTMLElement
+    ScrollTrigger.refresh()
+
     this.s = ScrollSmoother.create({
       smooth: 1,
       effects: true,
@@ -18,6 +24,15 @@ export default class Scroll {
         this.scroll = s
       },
     })
+  }
+
+  reset() {
+    this.s?.scrollTo(0, false, "top")
+  }
+
+  destroy() {
+    this.s?.kill()
+    this.s = null
   }
 
   getScroll() {
