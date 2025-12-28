@@ -14,6 +14,7 @@ interface Props {
 
 export default class Media {
   element: HTMLImageElement
+  anchorElement: HTMLAnchorElement
   scene: THREE.Scene
   sizes: Size
   material: THREE.ShaderMaterial
@@ -26,10 +27,11 @@ export default class Media {
   currentScroll: number
   lastScroll: number
   scrollSpeed: number
-  scrollTrigger: globalThis.ScrollTrigger
+  scrollTrigger: gsap.core.Tween
 
   constructor({ element, scene, sizes }: Props) {
     this.element = element
+    this.anchorElement = this.element.closest("a") as HTMLAnchorElement
     this.scene = scene
     this.sizes = sizes
 
@@ -45,9 +47,16 @@ export default class Media {
     this.setMeshPosition()
     this.setTexture()
 
-    console.log(this.element.src, this.mesh.position.y)
+    this.anchorElement.addEventListener("click", this.onClickLink.bind(this))
 
     this.scene.add(this.mesh)
+  }
+
+  onClickLink(e: PointerEvent) {
+    ;(e.currentTarget as HTMLAnchorElement).setAttribute(
+      "data-home-link-active",
+      "true"
+    )
   }
 
   createGeometry() {
@@ -135,34 +144,23 @@ export default class Media {
     this.mesh.position.y = this.meshPostion.y
   }
 
-  onVisible() {
-    gsap.to(this.material.uniforms.uProgress, {
+  observe() {
+    this.scrollTrigger = gsap.to(this.material.uniforms.uProgress, {
       value: 1,
+      scrollTrigger: {
+        trigger: this.element,
+        start: "top bottom",
+        end: "bottom top",
+        toggleActions: "play reset restart reset",
+      },
       duration: 1.6,
       ease: "linear",
     })
   }
 
-  onInvisible() {
-    gsap.set(this.material.uniforms.uProgress, {
-      value: 0,
-    })
-  }
-
-  observe() {
-    this.scrollTrigger = ScrollTrigger.create({
-      trigger: this.element,
-      start: "top bottom",
-      end: "bottom top",
-      onEnter: () => this.onVisible(),
-      onEnterBack: () => this.onVisible(),
-      onLeave: () => this.onInvisible(),
-      onLeaveBack: () => this.onInvisible(),
-    })
-  }
-
   destroy() {
     this.scrollTrigger.kill()
+    this.anchorElement.removeEventListener("click", this.onClickLink.bind(this))
     this.scene.remove(this.mesh)
     this.geometry.dispose()
     this.material.dispose()

@@ -41,6 +41,6 @@ const { media } = Astro.props
 
 <Layout uid={`detail-${media.index}`} template="detail">
   <div class="details">
-    <img src={media.url} alt={`Image ${media.index}`} />
+    <img data-detail-media src={media.url} alt={`Image ${media.index}`} />
   </div>
 </Layout>

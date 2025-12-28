@@ -20,6 +20,7 @@
 
 .grid {
   display: grid;
+  align-items: start;
   padding: 6vmax;
   gap: 3vmax;
   grid-template-columns: repeat(3, 1fr);
@@ -32,10 +33,11 @@
 
 .details {
   max-width: 100%;
-  padding: 0 6vmax;
+  padding: 6vmax;
 }
 
 .details img {
   width: 100%;
-  height: auto;
+  height: 100dvh;
+  object-fit: cover;
 }

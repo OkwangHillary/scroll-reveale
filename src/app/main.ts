@@ -5,14 +5,18 @@ import barba from "@barba/core"
 
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ScrollSmoother } from "gsap/ScrollSmoother"
+//@ts-ignore
+import { Flip } from "gsap/Flip"
 import gsap from "gsap"
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, Flip)
 
 class App {
   canvas: Canvas
   scroll: Scroll
   template: "home" | "detail"
+
+  mediaHomeState: Flip.FlipState
 
   constructor() {
     this.scroll = new Scroll()
@@ -45,6 +49,47 @@ class App {
             this.scroll.init()
 
             const s = this.scroll?.getScroll() || 0
+
+            const template = this.getCurrentTemplate()
+            this.setTemplate(template)
+
+            return new Promise<void>((resolve) => {
+              const tl = gsap.timeline()
+
+              tl.call(() => {
+                resolve()
+                this.canvas.onPageChange(this.template)
+              })
+            })
+          },
+        },
+        {
+          name: "work-detail",
+          from: {
+            custom: () => {
+              const activeLink = document.querySelector(
+                'a[data-home-link-active="true"]'
+              )
+              if (!activeLink) return false
+
+              return true
+            },
+          },
+          leave: () => {
+            return new Promise<void>((resolve) => {
+              const tl = gsap.timeline()
+
+              tl.call(() => {
+                resolve()
+              })
+            })
+          },
+          beforeEnter: () => {
+            this.scroll.reset()
+            this.scroll.destroy()
+          },
+          after: () => {
+            this.scroll.init()
 
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
