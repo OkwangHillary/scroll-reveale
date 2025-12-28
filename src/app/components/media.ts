@@ -45,6 +45,8 @@ export default class Media {
     this.setMeshPosition()
     this.setTexture()
 
+    console.log(this.element.src, this.mesh.position.y)
+
     this.scene.add(this.mesh)
   }
 

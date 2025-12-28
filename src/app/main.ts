@@ -44,15 +44,17 @@ class App {
           after: () => {
             this.scroll.init()
 
+            const s = this.scroll?.getScroll() || 0
+
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
-            this.canvas.onPageChange(this.template)
 
             return new Promise<void>((resolve) => {
               const tl = gsap.timeline()
 
               tl.call(() => {
                 resolve()
+                this.canvas.onPageChange(this.template)
               })
             })
           },

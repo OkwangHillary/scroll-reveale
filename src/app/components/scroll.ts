@@ -16,7 +16,6 @@ export default class Scroll {
 
     this.s = ScrollSmoother.create({
       smooth: 1,
-      effects: true,
       normalizeScroll: true,
       wrapper: document.getElementById("app") as HTMLElement,
       onUpdate: (self) => {
@@ -27,10 +26,11 @@ export default class Scroll {
   }
 
   reset() {
-    this.s?.scrollTo(0, false, "top")
+    this.s?.scrollTop(0)
   }
 
   destroy() {
+    this.s?.scrollTrigger.kill()
     this.s?.kill()
     this.s = null
   }
