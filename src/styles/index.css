@@ -1,9 +1,22 @@
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi/Satoshi-Variable.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 #app {
@@ -13,6 +26,8 @@
 
 body {
   overflow-y: scroll;
+  font-family: "Satoshi", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 }
 
 #webgl {
@@ -46,7 +61,11 @@ body {
 
 .details {
   max-width: 100%;
-  padding: 6vmax;
+  padding: 0 6vmax 6vmax 6vmax;
+}
+
+.details header {
+  padding: 3vmax 0;
 }
 
 .details-container {
