@@ -22,6 +22,7 @@ class App {
   constructor() {
     this.scroll = new Scroll()
     this.canvas = new Canvas()
+    //
 
     this.template = this.getCurrentTemplate()
 
