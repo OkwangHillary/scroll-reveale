@@ -84,6 +84,7 @@ class App {
           },
           before: () => {
             this.scrollBlocked = true
+            this.scroll.s?.paused(true)
           },
 
           leave: () => {
