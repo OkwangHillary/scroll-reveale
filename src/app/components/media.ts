@@ -28,6 +28,7 @@ export default class Media {
   lastScroll: number
   scrollSpeed: number
   scrollTrigger: gsap.core.Tween
+  onClickHandler: (e: PointerEvent) => void
 
   constructor({ element, scene, sizes }: Props) {
     this.element = element
@@ -47,7 +48,9 @@ export default class Media {
     this.setMeshPosition()
     this.setTexture()
 
-    this.anchorElement.addEventListener("click", this.onClickLink.bind(this))
+    // Persist handler reference for correct removal on destroy
+    this.onClickHandler = this.onClickLink.bind(this)
+    this.anchorElement.addEventListener("click", this.onClickHandler)
 
     this.scene.add(this.mesh)
   }
@@ -159,9 +162,10 @@ export default class Media {
   }
 
   destroy() {
-    this.scrollTrigger.kill()
-    this.anchorElement.removeEventListener("click", this.onClickLink.bind(this))
     this.scene.remove(this.mesh)
+    this.scrollTrigger?.kill()
+    this.anchorElement.removeEventListener("click", this.onClickHandler)
+    this.anchorElement.removeAttribute("data-home-link-active")
     this.geometry.dispose()
     this.material.dispose()
   }

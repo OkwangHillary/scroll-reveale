@@ -17,6 +17,7 @@ class App {
   template: "home" | "detail"
 
   mediaHomeState: Flip.FlipState
+  scrollBlocked: boolean = false
 
   constructor() {
     this.scroll = new Scroll()
@@ -26,6 +27,9 @@ class App {
 
     this.canvas.onPageChange(this.template)
 
+    let activeLinkImage: HTMLImageElement
+    let scrollTop: number
+
     barba.init({
       prefetchIgnore: true,
       transitions: [
@@ -33,6 +37,7 @@ class App {
           name: "default-transition",
           beforeLeave: () => {},
           leave: () => {
+            console.log("leave default")
             return new Promise<void>((resolve) => {
               const tl = gsap.timeline()
 
@@ -48,8 +53,6 @@ class App {
           after: () => {
             this.scroll.init()
 
-            const s = this.scroll?.getScroll() || 0
-
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
 
@@ -59,12 +62,14 @@ class App {
               tl.call(() => {
                 resolve()
                 this.canvas.onPageChange(this.template)
+                // Ensure new ScrollTriggers (from medias) are correctly computed
+                ScrollTrigger.refresh()
               })
             })
           },
         },
         {
-          name: "work-detail",
+          name: "home-detail",
           from: {
             custom: () => {
               const activeLink = document.querySelector(
@@ -75,14 +80,52 @@ class App {
               return true
             },
           },
-          leave: () => {
+          before: () => {
+            activeLinkImage = document.querySelector(
+              'a[data-home-link-active="true"] img'
+            ) as HTMLImageElement
+
             return new Promise<void>((resolve) => {
               const tl = gsap.timeline()
+
+              this.scrollBlocked = true
+
+              this.canvas.medias?.forEach((media) => {
+                if (media && media.element !== activeLinkImage) {
+                  tl.to(
+                    media.material.uniforms.uProgress,
+                    {
+                      duration: 1,
+                      value: 0,
+                      ease: "power1.inOut",
+                    },
+                    0
+                  )
+                }
+              })
 
               tl.call(() => {
                 resolve()
               })
             })
+          },
+
+          leave: () => {
+            scrollTop = this.scroll.getScroll()
+
+            activeLinkImage = document.querySelector(
+              'a[data-home-link-active="true"] img'
+            ) as HTMLImageElement
+
+            const container = document.querySelector(
+              ".container"
+            ) as HTMLElement
+            container.style.position = "fixed"
+            container.style.top = `-${scrollTop}px`
+            container.style.width = "100%"
+            container.style.zIndex = "1000"
+
+            this.mediaHomeState = Flip.getState(activeLinkImage)
           },
           beforeEnter: () => {
             this.scroll.reset()
@@ -91,15 +134,27 @@ class App {
           after: () => {
             this.scroll.init()
 
+            const detailContainer = document.querySelector(
+              ".details-container"
+            ) as HTMLElement
+
+            detailContainer.innerHTML = ""
+            detailContainer.appendChild(activeLinkImage)
+
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
 
-            return new Promise<void>((resolve) => {
-              const tl = gsap.timeline()
+            this.canvas.onPageChange(this.template)
 
-              tl.call(() => {
-                resolve()
-                this.canvas.onPageChange(this.template)
+            return new Promise<void>((resolve) => {
+              Flip.from(this.mediaHomeState, {
+                absolute: true,
+                duration: 1,
+                ease: "power1.inOut",
+                onComplete: () => {
+                  resolve()
+                  this.scrollBlocked = false
+                },
               })
             })
           },
@@ -107,7 +162,9 @@ class App {
       ],
     })
 
-    this.render()
+    // Drive rendering via GSAP's ticker to sync with ScrollSmoother updates
+    this.render = this.render.bind(this)
+    gsap.ticker.add(this.render)
   }
 
   getCurrentTemplate() {
@@ -122,10 +179,7 @@ class App {
 
   render() {
     const s = this.scroll?.getScroll() || 0
-
-    this.canvas.render(s)
-
-    requestAnimationFrame(this.render.bind(this))
+    this.canvas.render(s, !this.scrollBlocked)
   }
 }
 

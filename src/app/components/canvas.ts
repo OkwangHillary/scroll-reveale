@@ -142,11 +142,13 @@ export default class Canvas {
     }
   }
 
-  render(scroll: number) {
+  render(scroll: number, updateScroll: boolean = true) {
     this.time = this.clock.getElapsedTime()
 
     this.medias?.forEach((media) => {
-      media?.updateScroll(scroll)
+      if (updateScroll) {
+        media?.updateScroll(scroll)
+      }
     })
 
     this.renderer.render(this.scene, this.camera)

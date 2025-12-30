@@ -3,12 +3,17 @@
   z-index: 1;
 }
 
+body {
+  overflow-y: scroll;
+}
+
 #webgl {
   position: fixed;
-  z-index: 0;
+  z-index: 10;
   inset: 0;
   top: 0;
   left: 0;
+  pointer-events: none;
 }
 
 .container {
@@ -36,8 +41,14 @@
   padding: 6vmax;
 }
 
-.details img {
+.details-container {
   width: 100%;
   height: 100dvh;
+  overflow: hidden;
+}
+
+.details img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
