@@ -83,33 +83,7 @@ class App {
             },
           },
           before: () => {
-            activeLinkImage = document.querySelector(
-              'a[data-home-link-active="true"] img'
-            ) as HTMLImageElement
-
-            return new Promise<void>((resolve) => {
-              const tl = gsap.timeline()
-
-              this.scrollBlocked = true
-
-              this.canvas.medias?.forEach((media) => {
-                if (media && media.element !== activeLinkImage) {
-                  tl.to(
-                    media.material.uniforms.uProgress,
-                    {
-                      duration: 1,
-                      value: 0,
-                      ease: "power1.inOut",
-                    },
-                    0
-                  )
-                }
-              })
-
-              tl.call(() => {
-                resolve()
-              })
-            })
+            this.scrollBlocked = true
           },
 
           leave: () => {
@@ -118,6 +92,11 @@ class App {
             activeLinkImage = document.querySelector(
               'a[data-home-link-active="true"] img'
             ) as HTMLImageElement
+
+            this.canvas.medias?.forEach((media) => {
+              if (!media) return
+              media.scrollTrigger.kill()
+            })
 
             const container = document.querySelector(
               ".container"
@@ -146,17 +125,41 @@ class App {
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
 
-            this.canvas.onPageChange(this.template)
+            const tl = gsap.timeline()
 
             return new Promise<void>((resolve) => {
               Flip.from(this.mediaHomeState, {
                 absolute: true,
-                duration: 1,
-                ease: "power1.inOut",
-                onComplete: () => {
-                  resolve()
-                  this.scrollBlocked = false
-                },
+                delay: 0.3,
+                duration: 1.3,
+                ease: "power2.inOut",
+              })
+
+              this.canvas.medias?.forEach((media) => {
+                if (!media) return
+                if (media.element !== activeLinkImage) {
+                  tl.to(
+                    media.material.uniforms.uProgress,
+                    {
+                      duration: 0.6,
+                      value: 0,
+                      ease: "power2.inOut",
+                    },
+                    0
+                  )
+                } else {
+                  tl.to(
+                    media.material.uniforms.uProgress,
+                    { duration: 0.3, value: 1 },
+                    0
+                  )
+                }
+              })
+
+              tl.call(() => {
+                this.scrollBlocked = false
+                this.canvas.onPageChange(this.template)
+                resolve()
               })
             })
           },
@@ -164,7 +167,6 @@ class App {
       ],
     })
 
-    // Drive rendering via GSAP's ticker to sync with ScrollSmoother updates
     this.render = this.render.bind(this)
     gsap.ticker.add(this.render)
   }

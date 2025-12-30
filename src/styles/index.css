@@ -1,6 +1,14 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 #app {
   position: relative;
-  z-index: 1;
+  z-index: 10;
 }
 
 body {
@@ -9,7 +17,7 @@ body {
 
 #webgl {
   position: fixed;
-  z-index: 10;
+  z-index: 0;
   inset: 0;
   top: 0;
   left: 0;
