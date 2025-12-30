@@ -25,7 +25,9 @@ class App {
 
     this.template = this.getCurrentTemplate()
 
-    this.canvas.onPageChange(this.template)
+    this.onImagesLoaded(() => {
+      this.canvas.onPageChange(this.template)
+    })
 
     let activeLinkImage: HTMLImageElement
     let scrollTop: number
@@ -61,9 +63,9 @@ class App {
 
               tl.call(() => {
                 resolve()
-                this.canvas.onPageChange(this.template)
-                // Ensure new ScrollTriggers (from medias) are correctly computed
-                ScrollTrigger.refresh()
+                this.onImagesLoaded(() => {
+                  this.canvas.onPageChange(this.template)
+                })
               })
             })
           },
@@ -175,6 +177,31 @@ class App {
 
   setTemplate(template: string) {
     this.template = template as "home" | "detail"
+  }
+
+  onImagesLoaded(callback?: () => void) {
+    const medias = document.querySelectorAll("img")
+    let loadedImages = 0
+    const totalImages = medias.length
+
+    medias.forEach((img) => {
+      if (img.complete) {
+        loadedImages++
+      } else {
+        img.addEventListener("load", () => {
+          loadedImages++
+          if (loadedImages === totalImages) {
+            ScrollTrigger.refresh()
+            if (callback) callback()
+          }
+        })
+      }
+    })
+
+    if (loadedImages === totalImages) {
+      ScrollTrigger.refresh()
+      if (callback) callback()
+    }
   }
 
   render() {
