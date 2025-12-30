@@ -22,7 +22,6 @@ class App {
   constructor() {
     this.scroll = new Scroll()
     this.canvas = new Canvas()
-    //
 
     this.template = this.getCurrentTemplate()
 
@@ -40,7 +39,6 @@ class App {
           name: "default-transition",
           beforeLeave: () => {},
           leave: () => {
-            console.log("leave default")
             return new Promise<void>((resolve) => {
               const tl = gsap.timeline()
 
@@ -55,6 +53,7 @@ class App {
           },
           after: () => {
             this.scroll.init()
+            this.scroll.reset()
 
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
@@ -192,16 +191,16 @@ class App {
         img.addEventListener("load", () => {
           loadedImages++
           if (loadedImages === totalImages) {
-            ScrollTrigger.refresh()
             if (callback) callback()
+            ScrollTrigger.refresh()
           }
         })
       }
     })
 
     if (loadedImages === totalImages) {
-      ScrollTrigger.refresh()
       if (callback) callback()
+      ScrollTrigger.refresh()
     }
   }
 
