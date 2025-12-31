@@ -9,8 +9,10 @@ import { ScrollSmoother } from "gsap/ScrollSmoother"
 import { Flip } from "gsap/Flip"
 import gsap from "gsap"
 import Media from "./components/media"
+import { SplitText } from "gsap/SplitText"
+import TextAnimation from "./components/text-animation"
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, Flip)
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, Flip, SplitText)
 
 class App {
   canvas: Canvas
@@ -20,6 +22,7 @@ class App {
   mediaHomeState: Flip.FlipState
   scrollBlocked: boolean = false
   scrollTop: number
+  textAnimation: TextAnimation
 
   constructor() {
     if (typeof history !== "undefined" && "scrollRestoration" in history) {
@@ -28,11 +31,13 @@ class App {
 
     this.scroll = new Scroll()
     this.canvas = new Canvas()
+    this.textAnimation = new TextAnimation()
 
     this.template = this.getCurrentTemplate()
 
     this.onImagesLoaded(() => {
       this.canvas.createMedias()
+      this.textAnimation.animateIn({ delay: 0.3 })
     })
 
     let activeLinkImage: HTMLImageElement
@@ -49,6 +54,8 @@ class App {
           },
           leave: () => {
             const medias = this.canvas.medias && this.canvas.medias
+            //this.textAnimation.destroy()
+            //this.textAnimation.init()
 
             medias?.forEach((media) => {
               if (!media) return
@@ -60,7 +67,7 @@ class App {
             })
 
             return new Promise<void>((resolve) => {
-              const tl = gsap.timeline()
+              const tl = this.textAnimation.animateOut()
 
               this.canvas.medias?.forEach((media) => {
                 if (!media) return
@@ -94,6 +101,7 @@ class App {
           },
           after: () => {
             this.scroll.init()
+            this.textAnimation.init()
 
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
@@ -101,6 +109,7 @@ class App {
             this.onImagesLoaded(() => {
               this.canvas.medias = []
               this.canvas.createMedias()
+              this.textAnimation.animateIn()
             })
           },
         },
@@ -149,6 +158,7 @@ class App {
           },
           after: () => {
             this.scroll.init()
+            this.textAnimation.init()
 
             const detailContainer = document.querySelector(
               ".details-container"
@@ -162,6 +172,8 @@ class App {
 
             return new Promise<void>((resolve) => {
               let activeMedia: Media | null = null
+
+              this.textAnimation.animateIn({ delay: 0.5 })
 
               this.canvas.medias?.forEach((media) => {
                 if (!media) return
