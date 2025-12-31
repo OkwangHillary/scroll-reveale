@@ -6,6 +6,7 @@ export default class Scroll {
   s: globalThis.ScrollSmoother | null
 
   constructor() {
+    window.scrollTo(0, 0)
     this.init()
   }
 
@@ -26,8 +27,9 @@ export default class Scroll {
     ScrollTrigger.refresh()
   }
 
-  reset() {
-    this.s?.scrollTop(0)
+  reset(immediate?: boolean) {
+    if (immediate) this.s?.scrollTo(0, false, "top top")
+    else this.s?.scrollTop(0)
   }
 
   destroy() {

@@ -155,7 +155,7 @@ class App {
             ) as HTMLElement
 
             detailContainer.innerHTML = ""
-            detailContainer.appendChild(activeLinkImage)
+            detailContainer.append(activeLinkImage)
 
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
@@ -193,8 +193,6 @@ class App {
                       media = null
                     } else {
                       activeMedia = media
-                      media.onResize(this.canvas.sizes)
-                      media.material.uniforms.uProgress.value = 1
                     }
                   })
 

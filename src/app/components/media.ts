@@ -4,7 +4,6 @@ import gsap from "gsap"
 
 import vertexShader from "../shaders/vertex.glsl"
 import fragmentShader from "../shaders/fragment.glsl"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 interface Props {
   element: HTMLImageElement
