@@ -22,6 +22,10 @@ class App {
   scrollTop: number
 
   constructor() {
+    if (typeof history !== "undefined" && "scrollRestoration" in history) {
+      history.scrollRestoration = "manual"
+    }
+
     this.scroll = new Scroll()
     this.canvas = new Canvas()
 
@@ -39,9 +43,7 @@ class App {
       transitions: [
         {
           name: "default-transition",
-          beforeLeave: () => {
-            this.scrollBlocked = true
-          },
+          beforeLeave: () => {},
           leave: () => {
             const media = this.canvas.medias && this.canvas.medias[0]
             if (!media) return
@@ -80,10 +82,10 @@ class App {
             })
 
             this.scroll.reset()
+            this.scroll.destroy()
           },
           after: () => {
             this.scroll.init()
-            this.scroll.reset()
 
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
@@ -92,7 +94,6 @@ class App {
               const tl = gsap.timeline()
 
               tl.call(() => {
-                this.scrollBlocked = false
                 resolve()
                 this.onImagesLoaded(() => {
                   this.canvas.medias = []
@@ -116,7 +117,7 @@ class App {
           },
           before: () => {
             this.scrollBlocked = true
-            this.scroll.s?.paused(true)
+            //this.scroll.s?.paused(true)
           },
 
           leave: () => {
@@ -208,6 +209,19 @@ class App {
       ],
     })
 
+    window.addEventListener("beforeunload", () => {
+      this.scroll?.reset()
+    })
+
+    window.addEventListener("pageshow", (event) => {
+      // Handle BFCache restores without auto scroll restoration
+      const e = event as PageTransitionEvent
+      if (e.persisted) {
+        this.scroll?.reset()
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+      }
+    })
+
     this.render = this.render.bind(this)
     gsap.ticker.add(this.render)
   }
@@ -248,9 +262,7 @@ class App {
   }
 
   render() {
-    this.scrollTop = this.scrollBlocked
-      ? this.scrollTop
-      : this.scroll?.getScroll() || 0
+    this.scrollTop = this.scroll?.getScroll() || 0
     this.canvas.render(this.scrollTop, !this.scrollBlocked)
   }
 }

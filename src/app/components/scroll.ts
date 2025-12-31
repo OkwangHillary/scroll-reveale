@@ -27,16 +27,15 @@ export default class Scroll {
   }
 
   reset() {
-    this.s?.scrollTop(0)
+    this.s?.scrollTo(0, true)
   }
 
   destroy() {
-    this.s?.scrollTrigger.kill()
     this.s?.kill()
     this.s = null
   }
 
   getScroll() {
-    return this.s?.scrollTop() || 0
+    return this.scroll
   }
 }
