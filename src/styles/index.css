@@ -80,3 +80,29 @@ body {
   object-fit: cover;
   opacity: 0;
 }
+
+.details-data {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 1;
+}
+
+.details-data p:nth-last-of-type(1) {
+  grid-column-start: 1;
+  grid-row-end: 1;
+  grid-column-end: 4;
+}
+
+.details-data p:nth-last-of-type(2) {
+  grid-column-start: 4;
+  grid-row-end: 1;
+  grid-column-end: 7;
+}
+
+.details-data a {
+  grid-column-start: 9;
+  grid-column-end: 13;
+  grid-row-end: 1;
+  justify-self: end;
+  text-align: right;
+}
