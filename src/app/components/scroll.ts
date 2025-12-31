@@ -27,7 +27,7 @@ export default class Scroll {
   }
 
   reset() {
-    this.s?.scrollTo(0, true)
+    this.s?.scrollTop(0)
   }
 
   destroy() {

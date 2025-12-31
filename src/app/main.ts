@@ -43,32 +43,38 @@ class App {
       transitions: [
         {
           name: "default-transition",
-          beforeLeave: () => {},
+          before: () => {
+            this.scrollBlocked = true
+            this.scroll.s?.paused(true)
+          },
           leave: () => {
-            const media = this.canvas.medias && this.canvas.medias[0]
-            if (!media) return
+            const medias = this.canvas.medias && this.canvas.medias
 
-            media.onResize(this.canvas.sizes)
-
-            gsap.set(media.element, {
-              visibility: "hidden",
-              opacity: 0,
+            medias?.forEach((media) => {
+              if (!media) return
+              media.onResize(this.canvas.sizes)
+              gsap.set(media.element, {
+                visibility: "hidden",
+                opacity: 0,
+              })
             })
-            media.material.uniforms.uGridSize.value = 50
 
             return new Promise<void>((resolve) => {
               const tl = gsap.timeline()
 
-              tl.fromTo(
-                media.material.uniforms.uProgress,
-                { value: 1 },
-                {
-                  duration: 1.6,
-                  ease: "linear",
-                  value: 0,
-                },
-                0
-              )
+              this.canvas.medias?.forEach((media) => {
+                if (!media) return
+                tl.fromTo(
+                  media.material.uniforms.uProgress,
+                  { value: 1 },
+                  {
+                    duration: 1.6,
+                    ease: "linear",
+                    value: 0,
+                  },
+                  0
+                )
+              })
 
               tl.call(() => {
                 resolve()
@@ -81,6 +87,8 @@ class App {
               media = null
             })
 
+            this.scrollBlocked = false
+
             this.scroll.reset()
             this.scroll.destroy()
           },
@@ -90,16 +98,9 @@ class App {
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
 
-            return new Promise<void>((resolve) => {
-              const tl = gsap.timeline()
-
-              tl.call(() => {
-                resolve()
-                this.onImagesLoaded(() => {
-                  this.canvas.medias = []
-                  this.canvas.createMedias()
-                })
-              })
+            this.onImagesLoaded(() => {
+              this.canvas.medias = []
+              this.canvas.createMedias()
             })
           },
         },
@@ -117,7 +118,7 @@ class App {
           },
           before: () => {
             this.scrollBlocked = true
-            //this.scroll.s?.paused(true)
+            this.scroll.s?.paused(true)
           },
 
           leave: () => {
@@ -159,49 +160,48 @@ class App {
             const template = this.getCurrentTemplate()
             this.setTemplate(template)
 
-            const tl = gsap.timeline()
-
             return new Promise<void>((resolve) => {
+              let activeMedia: Media | null = null
+
+              this.canvas.medias?.forEach((media) => {
+                if (!media) return
+                if (media.element !== activeLinkImage) {
+                  gsap.to(media.material.uniforms.uProgress, {
+                    duration: 0.6,
+                    value: 0,
+                    ease: "power2.inOut",
+                  })
+                } else {
+                  gsap.set(media.material.uniforms.uProgress, { value: 0 })
+                  media.element.style.opacity = "1"
+                  media.element.style.visibility = "visible"
+                }
+              })
+
               Flip.from(this.mediaHomeState, {
                 absolute: true,
                 delay: 0.2,
                 duration: 1.3,
                 ease: "power2.inOut",
-              })
 
-              this.canvas.medias?.forEach((media) => {
-                if (!media) return
-                if (media.element !== activeLinkImage) {
-                  tl.to(
-                    media.material.uniforms.uProgress,
-                    {
-                      duration: 0.6,
-                      value: 0,
-                      ease: "power2.inOut",
-                    },
-                    0
-                  )
-                } else {
-                  gsap.set(media.material.uniforms.uProgress, { value: 0 })
-                }
-              })
+                onComplete: () => {
+                  this.scrollBlocked = false
+                  this.canvas.medias?.forEach((media) => {
+                    if (!media) return
+                    if (media.element !== activeLinkImage) {
+                      media.destroy()
+                      media = null
+                    } else {
+                      activeMedia = media
+                      media.onResize(this.canvas.sizes)
+                      media.material.uniforms.uProgress.value = 1
+                    }
+                  })
 
-              let activeMedia: Media | null = null
+                  this.canvas.medias = [activeMedia]
 
-              tl.call(() => {
-                this.scrollBlocked = false
-                this.canvas.medias?.forEach((media) => {
-                  if (media && media.element !== activeLinkImage) {
-                    media.destroy()
-                    media = null
-                  } else {
-                    activeMedia = media
-                  }
-                })
-
-                this.canvas.medias = [activeMedia]
-
-                resolve()
+                  resolve()
+                },
               })
             })
           },
@@ -209,18 +209,20 @@ class App {
       ],
     })
 
-    window.addEventListener("beforeunload", () => {
-      this.scroll?.reset()
-    })
+    // window.addEventListener("beforeunload", () => {
+    //   console.log("beforeunload")
+    //   this.scroll?.reset()
+    // })
 
-    window.addEventListener("pageshow", (event) => {
-      // Handle BFCache restores without auto scroll restoration
-      const e = event as PageTransitionEvent
-      if (e.persisted) {
-        this.scroll?.reset()
-        window.scrollTo({ top: 0, left: 0, behavior: "auto" })
-      }
-    })
+    // window.addEventListener("pageshow", (event) => {
+    //   // Handle BFCache restores without auto scroll restoration
+    //   console.log("pageshow")
+    //   const e = event as PageTransitionEvent
+    //   if (e.persisted) {
+    //     this.scroll?.reset()
+    //     window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+    //   }
+    // })
 
     this.render = this.render.bind(this)
     gsap.ticker.add(this.render)

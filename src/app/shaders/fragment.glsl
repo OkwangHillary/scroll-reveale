@@ -60,7 +60,7 @@ void main()
 
     //generate grid
     vec2 squareUvs = squaresGrid(coverUvs);
-    float gridSize = uGridSize;
+    float gridSize = floor(uContainerRes.x/20.);
     vec2 grid = vec2(floor(squareUvs.x*gridSize)/gridSize,floor(squareUvs.y*gridSize)/gridSize);
     vec4 gridTexture = vec4(uColor,0.);
     
