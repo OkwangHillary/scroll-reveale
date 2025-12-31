@@ -5,6 +5,9 @@ uniform vec2 uResolution;
 uniform float uProgress;
 uniform vec3 uColor;
 
+uniform vec2 uContainerRes;
+uniform float uGridSize;
+
 float random (vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))*
@@ -38,17 +41,32 @@ void main()
             
     vec2 newUvs = vUv;            
 
+    float imageAspectX = uResolution.x/uResolution.y;
+    float imageAspectY = uResolution.y/uResolution.x;
+    
+    float containerAspectX = uContainerRes.x/uContainerRes.y;
+    float containerAspectY = uContainerRes.y/uContainerRes.x;
+
+    vec2 ratio = vec2(
+        min(containerAspectX / imageAspectX, 1.0),
+        min(containerAspectY / imageAspectY, 1.0)
+    );
+
+    vec2 coverUvs = vec2(
+        vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
+        vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
+    );
+
 
     //generate grid
-    vec2 squareUvs = squaresGrid(vUv);
-    float gridSize = 20.;
+    vec2 squareUvs = squaresGrid(coverUvs);
+    float gridSize = uGridSize;
     vec2 grid = vec2(floor(squareUvs.x*gridSize)/gridSize,floor(squareUvs.y*gridSize)/gridSize);
     vec4 gridTexture = vec4(uColor,0.);
     
 
-    //image texture
-    vec4 texture = texture2D(uTexture,vUv);
-
+    //image texture    
+    vec4 texture = texture2D(uTexture,coverUvs);
     float height = 0.2;
 
     float progress = (1.+height)-(uProgress*(1.+height+height)); //goes from 1+height to -height

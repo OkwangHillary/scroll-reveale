@@ -42,7 +42,7 @@ body {
 .container {
   display: flex;
   flex-direction: column;
-  padding: 3vmax 0;
+  padding: 1vmax 0;
   gap: 3vmax;
 }
 

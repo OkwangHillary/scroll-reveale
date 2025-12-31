@@ -14,7 +14,7 @@ interface Props {
 
 export default class Media {
   element: HTMLImageElement
-  anchorElement: HTMLAnchorElement
+  anchorElement: HTMLAnchorElement | undefined
   scene: THREE.Scene
   sizes: Size
   material: THREE.ShaderMaterial
@@ -32,7 +32,9 @@ export default class Media {
 
   constructor({ element, scene, sizes }: Props) {
     this.element = element
-    this.anchorElement = this.element.closest("a") as HTMLAnchorElement
+    this.anchorElement = this.element.closest("a") as
+      | HTMLAnchorElement
+      | undefined
     this.scene = scene
     this.sizes = sizes
 
@@ -50,7 +52,7 @@ export default class Media {
 
     // Persist handler reference for correct removal on destroy
     this.onClickHandler = this.onClickLink.bind(this)
-    this.anchorElement.addEventListener("click", this.onClickHandler)
+    this.anchorElement?.addEventListener("click", this.onClickHandler)
 
     this.scene.add(this.mesh)
   }
@@ -73,7 +75,9 @@ export default class Media {
       uniforms: {
         uTexture: new THREE.Uniform(new THREE.Vector4()),
         uResolution: new THREE.Uniform(new THREE.Vector2(0, 0)),
+        uContainerRes: new THREE.Uniform(new THREE.Vector2(0, 0)),
         uProgress: new THREE.Uniform(0),
+        uGridSize: new THREE.Uniform(20),
         uColor: new THREE.Uniform(new THREE.Color("#242424")),
       },
     })
@@ -129,6 +133,11 @@ export default class Media {
           naturalWidth,
           naturalHeight
         )
+
+        this.material.uniforms.uContainerRes.value = new THREE.Vector2(
+          this.nodeDimensions.width,
+          this.nodeDimensions.height
+        )
       }
     )
   }
@@ -164,8 +173,8 @@ export default class Media {
   destroy() {
     this.scene.remove(this.mesh)
     this.scrollTrigger?.kill()
-    this.anchorElement.removeEventListener("click", this.onClickHandler)
-    this.anchorElement.removeAttribute("data-home-link-active")
+    this.anchorElement?.removeEventListener("click", this.onClickHandler)
+    this.anchorElement?.removeAttribute("data-home-link-active")
     this.geometry.dispose()
     this.material.dispose()
   }
@@ -176,5 +185,10 @@ export default class Media {
     this.setNodeBounds()
     this.setMeshDimensions()
     this.setMeshPosition()
+
+    this.material.uniforms.uContainerRes.value = new THREE.Vector2(
+      this.nodeDimensions.width,
+      this.nodeDimensions.height
+    )
   }
 }

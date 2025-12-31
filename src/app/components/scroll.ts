@@ -16,7 +16,6 @@ export default class Scroll {
     this.s = ScrollSmoother.create({
       smooth: 1,
       normalizeScroll: true,
-      ignoreMobileResize: true,
       wrapper: document.getElementById("app") as HTMLElement,
       content: document.getElementById("smooth-content") as HTMLElement,
       onUpdate: (self) => {

@@ -8,6 +8,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother"
 //@ts-ignore
 import { Flip } from "gsap/Flip"
 import gsap from "gsap"
+import Media from "./components/media"
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, Flip)
 
@@ -18,6 +19,7 @@ class App {
 
   mediaHomeState: Flip.FlipState
   scrollBlocked: boolean = false
+  scrollTop: number
 
   constructor() {
     this.scroll = new Scroll()
@@ -26,7 +28,7 @@ class App {
     this.template = this.getCurrentTemplate()
 
     this.onImagesLoaded(() => {
-      this.canvas.onPageChange(this.template)
+      this.canvas.createMedias()
     })
 
     let activeLinkImage: HTMLImageElement
@@ -37,10 +39,34 @@ class App {
       transitions: [
         {
           name: "default-transition",
-          beforeLeave: () => {},
+          beforeLeave: () => {
+            this.scrollBlocked = true
+          },
           leave: () => {
+            const media = this.canvas.medias && this.canvas.medias[0]
+            if (!media) return
+
+            media.onResize(this.canvas.sizes)
+
+            gsap.set(media.element, {
+              visibility: "hidden",
+              opacity: 0,
+            })
+            media.material.uniforms.uGridSize.value = 50
+
             return new Promise<void>((resolve) => {
               const tl = gsap.timeline()
+
+              tl.fromTo(
+                media.material.uniforms.uProgress,
+                { value: 1 },
+                {
+                  duration: 1.6,
+                  ease: "linear",
+                  value: 0,
+                },
+                0
+              )
 
               tl.call(() => {
                 resolve()
@@ -48,8 +74,12 @@ class App {
             })
           },
           beforeEnter: () => {
+            this.canvas.medias?.forEach((media) => {
+              media?.destroy()
+              media = null
+            })
+
             this.scroll.reset()
-            this.scroll.destroy()
           },
           after: () => {
             this.scroll.init()
@@ -62,9 +92,11 @@ class App {
               const tl = gsap.timeline()
 
               tl.call(() => {
+                this.scrollBlocked = false
                 resolve()
                 this.onImagesLoaded(() => {
-                  this.canvas.onPageChange(this.template)
+                  this.canvas.medias = []
+                  this.canvas.createMedias()
                 })
               })
             })
@@ -131,7 +163,7 @@ class App {
             return new Promise<void>((resolve) => {
               Flip.from(this.mediaHomeState, {
                 absolute: true,
-                delay: 0.3,
+                delay: 0.2,
                 duration: 1.3,
                 ease: "power2.inOut",
               })
@@ -149,17 +181,25 @@ class App {
                     0
                   )
                 } else {
-                  tl.to(
-                    media.material.uniforms.uProgress,
-                    { duration: 0.3, value: 1 },
-                    0
-                  )
+                  gsap.set(media.material.uniforms.uProgress, { value: 0 })
                 }
               })
 
+              let activeMedia: Media | null = null
+
               tl.call(() => {
                 this.scrollBlocked = false
-                this.canvas.onPageChange(this.template)
+                this.canvas.medias?.forEach((media) => {
+                  if (media && media.element !== activeLinkImage) {
+                    media.destroy()
+                    media = null
+                  } else {
+                    activeMedia = media
+                  }
+                })
+
+                this.canvas.medias = [activeMedia]
+
                 resolve()
               })
             })
@@ -208,8 +248,10 @@ class App {
   }
 
   render() {
-    const s = this.scroll?.getScroll() || 0
-    this.canvas.render(s, !this.scrollBlocked)
+    this.scrollTop = this.scrollBlocked
+      ? this.scrollTop
+      : this.scroll?.getScroll() || 0
+    this.canvas.render(this.scrollTop, !this.scrollBlocked)
   }
 }
 

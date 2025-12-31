@@ -111,18 +111,18 @@ export default class Canvas {
     return this.time
   }
 
-  createMedias() {
-    this.medias = []
-
+  createMedias(activeElement?: HTMLImageElement) {
     const images = document.querySelectorAll("img")
     images.forEach((image) => {
-      const media = new Media({
-        element: image,
-        scene: this.scene,
-        sizes: this.sizes,
-      })
+      if (image !== activeElement) {
+        const media = new Media({
+          element: image,
+          scene: this.scene,
+          sizes: this.sizes,
+        })
 
-      this.medias?.push(media)
+        this.medias?.push(media)
+      }
     })
 
     this.medias?.forEach((media) => {
