@@ -68,7 +68,7 @@ class App {
                   media.material.uniforms.uProgress,
                   { value: 1 },
                   {
-                    duration: 1.6,
+                    duration: 1,
                     ease: "linear",
                     value: 0,
                   },
@@ -208,21 +208,6 @@ class App {
         },
       ],
     })
-
-    // window.addEventListener("beforeunload", () => {
-    //   console.log("beforeunload")
-    //   this.scroll?.reset()
-    // })
-
-    // window.addEventListener("pageshow", (event) => {
-    //   // Handle BFCache restores without auto scroll restoration
-    //   console.log("pageshow")
-    //   const e = event as PageTransitionEvent
-    //   if (e.persisted) {
-    //     this.scroll?.reset()
-    //     window.scrollTo({ top: 0, left: 0, behavior: "auto" })
-    //   }
-    // })
 
     this.render = this.render.bind(this)
     gsap.ticker.add(this.render)
