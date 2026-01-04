@@ -209,7 +209,7 @@ class App {
 
               Flip.from(this.mediaHomeState, {
                 absolute: true,
-                //delay: 0.2,
+
                 duration: 1.3,
                 ease: "power2.inOut",
 
