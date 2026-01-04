@@ -30,7 +30,10 @@ export default class TextAnimation {
     if (this.icon) gsap.set(this.icon, { opacity: 0, autoAlpha: 1 })
 
     this.elements.forEach((el) => {
-      const split = SplitText.create(el, { type: "chars", mask: "chars" })
+      const split = SplitText.create(el, {
+        type: "words, chars",
+        mask: "chars",
+      })
 
       const type = (el.getAttribute("data-text-animation-type") ||
         "horizontal") as "vertical" | "horizontal"

@@ -65,7 +65,8 @@ h1 {
   display: grid;
   align-items: start;
   padding: 3vmax;
-  gap: 3vmax;
+  column-gap: 3vmax;
+  row-gap: 9vmax;
   grid-template-columns: repeat(3, 1fr);
 }
 
