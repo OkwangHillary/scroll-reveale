@@ -4,7 +4,7 @@ import { SplitText } from "gsap/SplitText"
 export default class TextAnimation {
   elements: HTMLElement[]
   splits: globalThis.SplitText[] = []
-  icon: HTMLElement
+  icon: HTMLElement | null = null
 
   constructor() {
     this.init()
@@ -17,9 +17,9 @@ export default class TextAnimation {
       "[data-text-animation]"
     ) as unknown as HTMLElement[]
 
-    this.icon = document.querySelector("[data-icon]") as HTMLElement
+    this.icon = document.querySelector("[data-icon]")
 
-    gsap.set(this.icon, { opacity: 0, autoAlpha: 1 })
+    if (this.icon) gsap.set(this.icon, { opacity: 0, autoAlpha: 1 })
 
     this.elements.forEach((el) => {
       const split = SplitText.create(el, { type: "chars", mask: "chars" })
@@ -36,7 +36,7 @@ export default class TextAnimation {
 
     const chars = this.splits.flatMap((split) => split.chars)
 
-    tl.to(this.icon, { opacity: 1, duration: 0.3 }, 0)
+    if (this.icon) tl.to(this.icon, { opacity: 1, duration: 0.3 }, 0)
 
     tl.to(
       chars,
@@ -56,7 +56,7 @@ export default class TextAnimation {
 
     const chars = this.splits.flatMap((split) => split.chars)
 
-    tl.to(this.icon, { opacity: 0, duration: 0.3 }, 0)
+    if (this.icon) tl.to(this.icon, { opacity: 0, duration: 0.3 }, 0)
 
     tl.to(
       chars,

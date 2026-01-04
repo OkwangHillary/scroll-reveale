@@ -1,53 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import Arrow from "../components/arrow.astro"
-
-interface Media {
-  url: string
-  device?: string
-  data?: string
-  name?: string
-  link?: string
-  index: number
-}
+import medias from "../data.json"
 
 export const getStaticPaths = async () => {
-  const medias: Media[] = [
-    {
-      url: "/assets/i1.jpg",
-      index: 1,
-      name: "Spencer Plouzek",
-      device: "SONY, ILCE-7C",
-      data: "Published 6 days ago",
-      link: "https://unsplash.com/@theguccer2100",
-    },
-    {
-      url: "/assets/i2.jpg",
-      data: "Published 3 days ago",
-      device: "NIKON CORPORATION, NIKON D610",
-      index: 2,
-      name: "Vitaliy Shevchenko",
-      link: "https://unsplash.com/@vitaliyshev89",
-    },
-    {
-      url: "/assets/i3.jpg",
-      data: "San Gregorio State Beach, California, USA",
-      device: "FUJIFILM, X-S10",
-      name: "Jacob Mitani",
-      link: "https://unsplash.com/@jacobmitani12",
-      index: 3,
-    },
-    {
-      url: "/assets/i4.jpg",
-      name: "Greysen Johnson",
-      link: "https://unsplash.com/@_grey_",
-      data: "Published on December 22, 2018",
-      device: "Canon, EOS Rebel T7i",
-      index: 4,
-    },
-  ]
-
-  return medias.map((media, index) => {
+  return medias.map((media) => {
     return {
       params: { index: media.index.toString() },
       props: {

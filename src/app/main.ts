@@ -54,8 +54,6 @@ class App {
           },
           leave: () => {
             const medias = this.canvas.medias && this.canvas.medias
-            //this.textAnimation.destroy()
-            //this.textAnimation.init()
 
             medias?.forEach((media) => {
               if (!media) return
@@ -128,10 +126,8 @@ class App {
           before: () => {
             this.scrollBlocked = true
             this.scroll.s?.paused(true)
-          },
 
-          leave: () => {
-            scrollTop = this.scroll.getScroll()
+            const tl = this.textAnimation.animateOut()
 
             activeLinkImage = document.querySelector(
               'a[data-home-link-active="true"] img'
@@ -140,7 +136,43 @@ class App {
             this.canvas.medias?.forEach((media) => {
               if (!media) return
               media.scrollTrigger.kill()
+              if (media.element !== activeLinkImage) {
+                tl.to(
+                  media.material.uniforms.uProgress,
+                  {
+                    duration: 0.6,
+                    value: 0,
+                    ease: "power2.inOut",
+                  },
+                  0
+                )
+              } else {
+                tl.to(
+                  media.material.uniforms.uProgress,
+                  {
+                    value: 1,
+                    duration: 0.6,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                      media.element.style.opacity = "1"
+                      media.element.style.visibility = "visible"
+                      gsap.set(media.material.uniforms.uProgress, { value: 0 })
+                    },
+                  },
+                  0
+                )
+              }
             })
+
+            return new Promise<void>((resolve) => {
+              tl.call(() => {
+                resolve()
+              })
+            })
+          },
+
+          leave: () => {
+            scrollTop = this.scroll.getScroll()
 
             const container = document.querySelector(
               ".container"
@@ -175,24 +207,9 @@ class App {
 
               this.textAnimation.animateIn({ delay: 0.5 })
 
-              this.canvas.medias?.forEach((media) => {
-                if (!media) return
-                if (media.element !== activeLinkImage) {
-                  gsap.to(media.material.uniforms.uProgress, {
-                    duration: 0.6,
-                    value: 0,
-                    ease: "power2.inOut",
-                  })
-                } else {
-                  gsap.set(media.material.uniforms.uProgress, { value: 0 })
-                  media.element.style.opacity = "1"
-                  media.element.style.visibility = "visible"
-                }
-              })
-
               Flip.from(this.mediaHomeState, {
                 absolute: true,
-                delay: 0.2,
+                //delay: 0.2,
                 duration: 1.3,
                 ease: "power2.inOut",
 

@@ -1,27 +1,32 @@
 ---
 import Layout from "../layouts/Layout.astro"
+import medias from "../data.json"
 ---
 
 <Layout uid="home" template="home">
   <div data-gallery-container class="container">
     <div class="grid">
       <a href="/1">
-        <img loading="eager" data-flip-id="img" src="/assets/i1.jpg" alt="" />
+        <img loading="eager" data-flip-id="img" src={medias[0].url} alt="" />
+        <p data-text-animation>{medias[0].name}</p>
       </a>
     </div>
     <div class="grid">
       <div></div>
       <a href="/2">
-        <img loading="eager" data-flip-id="img" src="/assets/i2.jpg" alt="" />
+        <img loading="eager" data-flip-id="img" src={medias[1].url} alt="" />
+        <p data-text-animation>{medias[1].name}</p>
       </a>
       <a href="/3">
-        <img loading="eager" data-flip-id="img" src="/assets/i3.jpg" alt="" />
+        <img loading="eager" data-flip-id="img" src={medias[2].url} alt="" />
+        <p data-text-animation>{medias[2].name}</p>
       </a>
     </div>
     <div class="grid">
       <div></div>
       <a href="/4">
-        <img loading="eager" data-flip-id="img" src="/assets/i4.jpg" alt="" />
+        <img loading="eager" data-flip-id="img" src={medias[3].url} alt="" />
+        <p data-text-animation>{medias[3].name}</p>
       </a>
     </div>
   </div>
