@@ -43,10 +43,11 @@ body {
   padding: 3vmax;
 }
 h1 {
-  font-size: 11.6vmax;
+  font-size: 12.2vw;
   font-weight: 700;
   text-transform: uppercase;
   line-height: 100%;
+  letter-spacing: -0.03em;
 }
 
 .container {
