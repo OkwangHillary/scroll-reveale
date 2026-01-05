@@ -30,5 +30,29 @@
     "data": "Published on December 22, 2018",
     "device": "Canon, EOS Rebel T7i",
     "index": 4
+  },
+  {
+    "url": "/assets/i5.jpg",
+    "name": "Leon Pauleikhoff",
+    "link": "https://unsplash.com/@lebalu",
+    "data": "Yosemite National Park, Kalifornien, USA",
+    "device": "Published on July 10, 2023",
+    "index": 5
+  },
+  {
+    "url": "/assets/i6.jpg",
+    "name": "Jeffrey Brandjes",
+    "link": "https://unsplash.com/@jeffreyfotografie",
+    "data": "Lackenkogel, Oostenrijk",
+    "device": "Published on February 27, 2021",
+    "index": 6
+  },
+  {
+    "url": "/assets/i7.jpg",
+    "name": "Stefano Zocca",
+    "link": "https://unsplash.com/@stefano_zocca",
+    "data": "Pontebba, UD, Italia",
+    "device": "NIKON CORPORATION, NIKON D800",
+    "index": 7
   }
 ]
