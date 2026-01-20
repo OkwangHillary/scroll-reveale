@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import medias from "../data.json"
+import Header from "../components/header.astro"
 
 export const getStaticPaths = async () => {
   return medias.map((media) => {
@@ -17,6 +18,7 @@ const { media } = Astro.props
 ---
 
 <Layout uid={`detail-${media.index}`} template="detail">
+  <Header />
   <div class="details">
     <div class="details-data" data-text-animation>
       <a href="/">← Index</a>

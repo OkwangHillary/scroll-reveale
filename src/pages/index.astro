@@ -1,13 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import medias from "../data.json"
+import Header from "../components/header.astro"
 ---
 
 <Layout uid="home" template="home">
   <div data-gallery-container class="container">
+    <Header />
     <div class="grid-container">
       <div class="grid">
-        <h1 class="grid__item" style="--r: 1; --c: 5; --s: 3"
+        <h1
+          class="grid__item"
+          style="--r: 1; --c: 5; --s: 3"
           data-text-animation-in-duration="0.5"
           data-text-animation-out-duration="0.4"
           data-text-animation-in-delay="0.1"

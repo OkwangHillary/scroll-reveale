@@ -7,6 +7,7 @@ interface AnimationProps {
   inDuration: number
   outDuration: number
   inDelay?: number
+  outStagger?: number
 }
 
 export default class TextAnimation {
@@ -22,7 +23,7 @@ export default class TextAnimation {
     this.animations = []
 
     this.elements = document.querySelectorAll(
-      "[data-text-animation]"
+      "[data-text-animation]",
     ) as unknown as HTMLElement[]
 
     this.icon = document.querySelector("[data-icon]")
@@ -39,15 +40,19 @@ export default class TextAnimation {
         "horizontal") as "vertical" | "horizontal"
 
       const inDuration = parseFloat(
-        el.getAttribute("data-text-animation-in-duration") || "0.25"
+        el.getAttribute("data-text-animation-in-duration") || "0.25",
       )
 
       const outDuration = parseFloat(
-        el.getAttribute("data-text-animation-out-duration") || "0.2"
+        el.getAttribute("data-text-animation-out-duration") || "0.2",
       )
 
       const inDelay = parseFloat(
-        el.getAttribute("data-text-animation-in-delay") || "0"
+        el.getAttribute("data-text-animation-in-delay") || "0",
+      )
+
+      const outStagger = parseFloat(
+        el.getAttribute("data-text-animation-out-stagger") || "0.01",
       )
 
       const initialProps =
@@ -58,7 +63,14 @@ export default class TextAnimation {
       })
 
       gsap.set(el, { autoAlpha: 1 })
-      this.animations.push({ split, type, inDuration, outDuration, inDelay })
+      this.animations.push({
+        split,
+        type,
+        inDuration,
+        outDuration,
+        outStagger,
+        inDelay,
+      })
     })
   }
 
@@ -78,7 +90,7 @@ export default class TextAnimation {
           duration: inDuration,
           delay: inDelay,
         },
-        0
+        0,
       )
     })
 
@@ -89,7 +101,7 @@ export default class TextAnimation {
 
     if (this.icon) tl.to(this.icon, { opacity: 0, duration: 0.3 }, 0)
 
-    this.animations.forEach(({ split, type, outDuration }) => {
+    this.animations.forEach(({ split, type, outDuration, outStagger }) => {
       const finalProps =
         type === "vertical" ? { yPercent: 100 } : { xPercent: 100 }
 
@@ -97,11 +109,11 @@ export default class TextAnimation {
         split.chars,
         {
           ...finalProps,
-          stagger: 0.0125,
+          stagger: outStagger || 0.0125,
           ease: "power2.out",
           duration: outDuration,
         },
-        0
+        0,
       )
     })
 
