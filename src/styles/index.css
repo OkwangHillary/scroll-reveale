@@ -22,7 +22,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-y: scroll;
-  font-family: 'dm-sans', sans-serif;
+  font-family: "dm-sans", sans-serif;
   font-style: normal;
 }
 
@@ -63,10 +63,10 @@ a {
   justify-items: start;
   grid-template-columns: auto auto auto 1fr;
   grid-template-areas:
-    'title title title title'
-    'back archive github ...'
-    'tags tags tags tags'
-    'sponsor sponsor sponsor sponsor';
+    "title title title title"
+    "back archive github ..."
+    "tags tags tags tags"
+    "sponsor sponsor sponsor sponsor";
 
   #cdawrap {
     justify-self: start;
@@ -111,8 +111,8 @@ a {
     grid-template-rows: auto auto;
     align-content: space-between;
     grid-template-areas:
-      'title back github archive demos'
-      'tags tags tags sponsor sponsor';
+      "title back github archive demos"
+      "tags tags tags sponsor sponsor";
 
     .frame__tags {
       align-self: end;
@@ -195,7 +195,8 @@ h1 {
 .details-container {
   width: 100%;
   height: 100dvh;
-  overflow: hidden;
+  position: relative;
+  z-index: 0;
 }
 
 .details img {
@@ -211,6 +212,8 @@ h1 {
   gap: 2rem;
   padding-bottom: 0.5rem;
   align-items: end;
+  position: relative;
+  z-index: 10;
 }
 
 [data-text-animation],
