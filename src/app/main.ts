@@ -136,19 +136,23 @@ class App {
             this.canvas.medias?.forEach((media) => {
               if (!media) return
               media.scrollTrigger.kill()
+
+              const currentProgress = media.material.uniforms.uProgress.value
+              const totalDuration = 1.2
+
               if (media.element !== activeLinkImage) {
+                const remainingDuration = totalDuration * currentProgress
+
                 tl.to(
                   media.material.uniforms.uProgress,
                   {
-                    duration: 1.2,
+                    duration: remainingDuration,
                     value: 0,
                     ease: "linear",
                   },
                   0,
                 )
               } else {
-                const currentProgress = media.material.uniforms.uProgress.value
-                const totalDuration = 1.2
                 const remainingDuration = totalDuration * (1 - currentProgress)
 
                 tl.to(
