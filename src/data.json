@@ -2,64 +2,64 @@
   {
     "url": "/assets/1.webp",
     "index": 1,
-    "name": "After the rain",
-    "location": "Kawamata, Fukushima",
-    "data": "June 14, 1983"
+    "name": "Morning Ascent",
+    "location": "Northern Range",
+    "data": "June 12, 1972"
   },
   {
     "url": "/assets/2.webp",
     "index": 2,
-    "name": "Quiet vending glow",
-    "location": "Arita, Saga",
-    "data": "October 3, 1987"
+    "name": "Camp at Dusk",
+    "location": "Base Camp",
+    "data": "September 4, 1974"
   },
   {
     "url": "/assets/3.webp",
     "index": 3,
-    "name": "Telephone wires like ink",
-    "location": "Onomichi, Hiroshima",
-    "data": "April 22, 1981"
+    "name": "Crossing the Valley",
+    "location": "Interior Highlands",
+    "data": "July 19, 1971"
   },
   {
     "url": "/assets/4.webp",
     "index": 4,
-    "name": "Station platform haze",
-    "location": "Suwa, Nagano",
-    "data": "January 9, 1986"
+    "name": "Quiet Plateau",
+    "location": "High Ridge",
+    "data": "May 3, 1976"
   },
   {
     "url": "/assets/5.webp",
     "index": 5,
-    "name": "Cicadas in the concrete",
-    "location": "Kurayoshi, Tottori",
-    "data": "August 18, 1984"
+    "name": "Rest Stop",
+    "location": "Rocky Pass",
+    "data": "August 22, 1973"
   },
   {
     "url": "/assets/6.webp",
     "index": 6,
-    "name": "Laundry lines at dusk",
-    "location": "Hita, Oita",
-    "data": "September 27, 1982"
+    "name": "Evening Descent",
+    "location": "Southern Slope",
+    "data": "September 15, 1975"
   },
   {
     "url": "/assets/7.webp",
     "index": 7,
-    "name": "River mist, empty bridge",
-    "location": "Mino, Gifu",
-    "data": "November 11, 1988"
+    "name": "Along the Ridge",
+    "location": "Upper Trail",
+    "data": "June 28, 1977"
   },
   {
     "url": "/assets/8.webp",
     "index": 8,
-    "name": "Pachinko echoes, closed Door",
-    "location": "Shingu, Wakayama",
-    "data": "May 6, 1985"
+    "name": "Shelter from the Wind",
+    "location": "Expedition Route",
+    "data": "July 9, 1970"
   },
   {
     "url": "/assets/9.webp",
     "index": 9,
-    "name": "Paper lantern silence",
-    "location": "Tsuwano, Shimane",
-    "data": "February 24, 1989"
+    "name": "Last Light",
+    "location": "Far Horizon",
+    "data": "August 31, 1978"
   }
 ]
