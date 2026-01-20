@@ -2,6 +2,7 @@ import gsap from "gsap"
 import { SplitText } from "gsap/SplitText"
 
 interface AnimationProps {
+  element: HTMLElement
   split: globalThis.SplitText
   type: "vertical" | "horizontal"
   inDuration: number
@@ -14,6 +15,7 @@ export default class TextAnimation {
   elements: HTMLElement[]
   animations: AnimationProps[] = []
   icon: HTMLElement | null = null
+  tweensWithScroll: gsap.core.Tween[] = []
 
   constructor() {
     this.init()
@@ -64,6 +66,7 @@ export default class TextAnimation {
 
       gsap.set(el, { autoAlpha: 1 })
       this.animations.push({
+        element: el,
         split,
         type,
         inDuration,
@@ -79,23 +82,48 @@ export default class TextAnimation {
 
     if (this.icon) tl.to(this.icon, { opacity: 1, duration: 0.3 }, 0)
 
-    this.animations.forEach(({ split, inDuration, inDelay }) => {
-      tl.to(
-        split.chars,
-        {
+    this.animations.forEach(({ element, split, inDuration, inDelay }) => {
+      if (element.hasAttribute("data-text-animation-on-scroll")) {
+        const parentGridItem = element
+          .closest(".grid__item")
+          ?.querySelector("img")
+
+        const tweenWithScroll = gsap.to(split.chars, {
           xPercent: 0,
           yPercent: 0,
           stagger: 0.0125,
+          scrollTrigger: {
+            trigger: element,
+            endTrigger: parentGridItem,
+            start: "bottom bottom",
+            end: "bottom top",
+            toggleActions: "play reset restart reset",
+          },
           ease: "power2.out",
           duration: inDuration,
           delay: inDelay,
-        },
-        0,
-      )
+        })
+
+        this.tweensWithScroll.push(tweenWithScroll)
+      } else {
+        tl.to(
+          split.chars,
+          {
+            xPercent: 0,
+            yPercent: 0,
+            stagger: 0.0125,
+            ease: "power2.out",
+            duration: inDuration,
+            delay: inDelay,
+          },
+          0,
+        )
+      }
     })
 
     return tl
   }
+
   animateOut() {
     const tl = gsap.timeline()
 
@@ -121,6 +149,11 @@ export default class TextAnimation {
   }
 
   destroy() {
+    this.tweensWithScroll.forEach((tween) => {
+      tween.scrollTrigger?.kill()
+      tween.kill()
+    })
+
     this.animations.forEach(({ split }) => {
       split.revert()
     })

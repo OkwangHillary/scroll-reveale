@@ -59,7 +59,7 @@ export default class Media {
   onClickLink(e: PointerEvent) {
     ;(e.currentTarget as HTMLAnchorElement).setAttribute(
       "data-home-link-active",
-      "true"
+      "true",
     )
   }
 
@@ -130,14 +130,14 @@ export default class Media {
 
         this.material.uniforms.uResolution.value = new THREE.Vector2(
           naturalWidth,
-          naturalHeight
+          naturalHeight,
         )
 
         this.material.uniforms.uContainerRes.value = new THREE.Vector2(
           this.nodeDimensions.width,
-          this.nodeDimensions.height
+          this.nodeDimensions.height,
         )
-      }
+      },
     )
   }
 
@@ -171,6 +171,7 @@ export default class Media {
 
   destroy() {
     this.scene.remove(this.mesh)
+    this.scrollTrigger.scrollTrigger?.kill()
     this.scrollTrigger?.kill()
     this.anchorElement?.removeEventListener("click", this.onClickHandler)
     this.anchorElement?.removeAttribute("data-home-link-active")
@@ -187,7 +188,7 @@ export default class Media {
 
     this.material.uniforms.uContainerRes.value = new THREE.Vector2(
       this.nodeDimensions.width,
-      this.nodeDimensions.height
+      this.nodeDimensions.height,
     )
   }
 }
