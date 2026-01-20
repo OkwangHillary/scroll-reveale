@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro"
-import Arrow from "../components/arrow.astro"
 import medias from "../data.json"
 
 export const getStaticPaths = async () => {
@@ -20,21 +19,10 @@ const { media } = Astro.props
 <Layout uid={`detail-${media.index}`} template="detail">
   <div class="details">
     <div class="details-data" data-text-animation>
-      <div>
-        <a href="/">
-          <Arrow />
-          <span>Index</span>
-        </a>
-      </div>
-      <div>
-        <p>{media.data}</p>
-      </div>
-      <div><p>{media.device}</p></div>
-      <div>
-        <a target="_blank" rel="noopener noreferrer" href={media.link}>
-          {media.name}</a
-        >
-      </div>
+      <a href="/">← Index</a>
+      <p>{media.data}</p>
+      <p>{media.location}</p>
+      <p>{media.name}</p>
     </div>
     <div class="details-container">
       <img

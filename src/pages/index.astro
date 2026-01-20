@@ -5,54 +5,52 @@ import medias from "../data.json"
 
 <Layout uid="home" template="home">
   <div data-gallery-container class="container">
-    <div class="header">
-      <h1
-        data-text-animation-in-duration="0.5"
-        data-text-animation-out-duration="0.4"
-        data-text-animation-in-delay="0.1"
-        data-text-animation-type="vertical"
-        data-text-animation
-      >
-        Our Selection
-      </h1>
-    </div>
     <div class="grid-container">
       <div class="grid">
-        <a href="/1">
+        <h1 class="grid__item" style="--r: 1; --c: 5; --s: 3"
+          data-text-animation-in-duration="0.5"
+          data-text-animation-out-duration="0.4"
+          data-text-animation-in-delay="0.1"
+          data-text-animation-type="vertical"
+          data-text-animation
+        >
+          Our Selection
+        </h1>
+        <a class="grid__item" href="/1" style="--r: 1; --c: 1; --s: 4">
           <img loading="eager" src={medias[0].url} alt="" />
           <p data-text-animation>{medias[0].name}</p>
         </a>
-      </div>
-      <div class="grid">
-        <a href="/2">
+        <a class="grid__item" href="/2" style="--r: 2; --c: 4; --s: 3">
           <img loading="eager" src={medias[1].url} alt="" />
           <p data-text-animation>{medias[1].name}</p>
         </a>
-        <a href="/3">
+        <a class="grid__item" href="/3" style="--r: 2; --c: 7; --s: 2">
           <img loading="eager" src={medias[2].url} alt="" />
           <p data-text-animation>{medias[2].name}</p>
         </a>
-      </div>
-      <div class="grid">
-        <a href="/4">
+        <a class="grid__item" href="/4" style="--r: 3; --c: 3; --s: 4">
           <img loading="eager" src={medias[3].url} alt="" />
           <p data-text-animation>{medias[3].name}</p>
         </a>
-      </div>
-      <div class="grid">
-        <a href="/5">
+        <a class="grid__item" href="/5" style="--r: 4; --c: 1; --s: 4">
           <img loading="eager" src={medias[4].url} alt="" />
           <p data-text-animation>{medias[4].name}</p>
         </a>
-      </div>
-      <div class="grid">
-        <a href="/7">
+        <a class="grid__item" href="/6" style="--r: 5; --c: 3; --s: 5">
+          <img loading="eager" src={medias[5].url} alt="" />
+          <p data-text-animation>{medias[5].name}</p>
+        </a>
+        <a class="grid__item" href="/7" style="--r: 6; --c: 4; --s: 4">
           <img loading="eager" src={medias[6].url} alt="" />
           <p data-text-animation>{medias[6].name}</p>
         </a>
-        <a href="/6">
-          <img loading="eager" src={medias[5].url} alt="" />
-          <p data-text-animation>{medias[5].name}</p>
+        <a class="grid__item" href="/8" style="--r: 7; --c: 1; --s: 3">
+          <img loading="eager" src={medias[7].url} alt="" />
+          <p data-text-animation>{medias[7].name}</p>
+        </a>
+        <a class="grid__item" href="/9" style="--r: 8; --c: 4; --s: 2">
+          <img loading="eager" src={medias[8].url} alt="" />
+          <p data-text-animation>{medias[8].name}</p>
         </a>
       </div>
     </div>

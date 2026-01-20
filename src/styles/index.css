@@ -1,9 +1,10 @@
-@font-face {
-  font-family: "Satoshi";
-  src: url("/fonts/satoshi/Satoshi-Variable.ttf") format("truetype");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
+:root {
+  font-size: 13px;
+  --color-text: #000000;
+  --color-bg: #ffffff;
+  --color-link: #000000;
+  --color-link-hover: #000000;
+  --page-padding: 2rem;
 }
 
 *,
@@ -14,20 +15,120 @@
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-y: scroll;
+  font-family: 'dm-sans', sans-serif;
+  font-style: normal;
+}
+
 a {
   text-decoration: none;
-  color: inherit;
+  color: var(--color-link);
+  outline: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+    color: var(--color-link-hover);
+  }
+
+  &:focus {
+    outline: none;
+    background: lightgrey;
+
+    &:not(:focus-visible) {
+      background: transparent;
+    }
+
+    &:focus-visible {
+      outline: 2px solid red;
+      background: transparent;
+    }
+  }
+}
+
+.frame {
+  padding: var(--page-padding);
+  display: grid;
+  z-index: 1000;
+  position: relative;
+  grid-row-gap: 1rem;
+  grid-column-gap: 2rem;
+  pointer-events: none;
+  justify-items: start;
+  grid-template-columns: auto auto auto 1fr;
+  grid-template-areas:
+    'title title title title'
+    'back archive github ...'
+    'tags tags tags tags'
+    'sponsor sponsor sponsor sponsor';
+
+  #cdawrap {
+    justify-self: start;
+    grid-area: sponsor;
+  }
+
+  a,
+  button {
+    pointer-events: auto;
+  }
+
+  .frame__title {
+    grid-area: title;
+    font-size: inherit;
+    margin: 0;
+    font-weight: bold;
+  }
+
+  .frame__back {
+    grid-area: back;
+    justify-self: start;
+  }
+
+  .frame__archive {
+    grid-area: archive;
+    justify-self: start;
+  }
+
+  .frame__github {
+    grid-area: github;
+  }
+
+  .frame__tags {
+    grid-area: tags;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  @media screen and (min-width: 53em) {
+    grid-template-columns: auto auto auto auto 1fr;
+    grid-template-rows: auto auto;
+    align-content: space-between;
+    grid-template-areas:
+      'title back github archive demos'
+      'tags tags tags sponsor sponsor';
+
+    .frame__tags {
+      align-self: end;
+    }
+
+    #cdawrap {
+      justify-self: end;
+      text-align: right;
+      max-width: 300px;
+    }
+  }
 }
 
 #app {
   position: relative;
   z-index: 10;
-}
-
-body {
-  overflow-y: scroll;
-  font-family: "Satoshi", system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 }
 
 #webgl {
@@ -39,11 +140,8 @@ body {
   pointer-events: none;
 }
 
-.header {
-  padding: 3vmax;
-}
 h1 {
-  font-size: 12.2vw;
+  font-size: calc(2rem, 10vw, 5rem);
   font-weight: 700;
   text-transform: uppercase;
   line-height: 100%;
@@ -53,37 +151,36 @@ h1 {
 .container {
   display: flex;
   flex-direction: column;
-  padding: 1vmax 0;
 }
 
 .grid-container {
   display: flex;
   flex-direction: column;
-  gap: 3vmax;
 }
 
 .grid {
   display: grid;
-  align-items: start;
-  padding: 3vmax;
+  padding: var(--page-padding);
   column-gap: 3vmax;
   row-gap: 9vmax;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(9, 1fr);
 }
 
-.grid:nth-child(1) a {
-  grid-column-start: 1;
-  grid-column-end: 2;
+.grid__item {
+  grid-column: var(--c) / span var(--s);
+  grid-row: var(--r);
+  aspect-ratio: var(--ar);
+  min-height: 20vh;
 }
 
 .container img {
-  max-width: 100%;
+  width: 100%;
   opacity: 0;
 }
 
 .details {
   max-width: 100%;
-  padding: 0 3vmax 3vmax 3vmax;
+  padding: var(--page-padding);
 }
 
 .details header {
@@ -105,128 +202,12 @@ h1 {
 
 .details-data {
   display: grid;
-  font-size: 16px;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 1;
-  padding: 3vmax 0;
-}
-
-@media (max-width: 768px) {
-  .details-data {
-    display: flex;
-    flex-direction: column;
-  }
-}
-
-.details-data div:nth-of-type(1) {
-  grid-column-start: 1;
-  grid-row-end: 1;
-  grid-column-end: 2;
-}
-
-.details-data div:nth-of-type(2) {
-  grid-column-start: 3;
-  grid-row-end: 1;
-  grid-column-end: 7;
-}
-.details-data div:nth-of-type(3) {
-  grid-column-start: 8;
-  grid-row-end: 1;
-  grid-column-end: 11;
-}
-
-.details-data div:nth-of-type(4) {
-  grid-column-start: 11;
-  grid-column-end: 13;
-  grid-row-end: 1;
-  justify-self: end;
-  text-align: right;
-}
-@media (max-width: 768px) {
-  .details-data div:nth-of-type(4) {
-    justify-self: start;
-    text-align: left;
-  }
+  padding-bottom: 1rem;
 }
 
 [data-text-animation],
 [data-icon] {
   visibility: hidden;
-}
-
-.grid:nth-of-type(1) a {
-  grid-column-start: 1;
-  grid-column-end: 2;
-}
-
-@media (max-width: 768px) {
-  .grid:nth-of-type(1) a {
-    grid-column-start: 1;
-    grid-column-end: 3;
-  }
-}
-
-.grid:nth-of-type(2) a:nth-child(1) {
-  grid-column-start: 2;
-  grid-column-end: 3;
-}
-.grid:nth-of-type(2) a:nth-child(2) {
-  grid-column-start: 3;
-  grid-column-end: 4;
-}
-
-@media (max-width: 768px) {
-  .grid:nth-of-type(2) a:nth-child(1) {
-    grid-column-start: 1;
-    grid-column-end: 4;
-  }
-  .grid:nth-of-type(2) a:nth-child(2) {
-    grid-column-start: 2;
-    grid-column-end: 4;
-  }
-}
-
-.grid:nth-of-type(3) a {
-  grid-column-start: 2;
-  grid-column-end: 3;
-}
-
-@media (max-width: 768px) {
-  .grid:nth-of-type(3) a {
-    grid-column-start: 1;
-    grid-column-end: 4;
-  }
-}
-
-.grid:nth-of-type(4) a {
-  grid-column-start: 1;
-  grid-column-end: 3;
-}
-
-@media (max-width: 768px) {
-  .grid:nth-of-type(4) a {
-    grid-column-start: 1;
-    grid-column-end: 4;
-  }
-}
-
-.grid:nth-of-type(5) a:nth-child(1) {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  align-self: self-end;
-}
-.grid:nth-of-type(5) a:nth-child(2) {
-  grid-column-start: 2;
-  grid-column-end: 3;
-}
-
-@media (max-width: 768px) {
-  .grid:nth-of-type(5) a:nth-child(1) {
-    grid-column-start: 1;
-    grid-column-end: 4;
-  }
-  .grid:nth-of-type(5) a:nth-child(2) {
-    grid-column-start: 2;
-    grid-column-end: 4;
-  }
 }
