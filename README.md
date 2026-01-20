@@ -1,36 +1,14 @@
-# Astro Starter Kit: Basics
+# Pixel Image Effect with GSAP and Three.js
 
-```sh
-npm create astro@latest -- --template basics
-```
+Animated, multi-page gallery where images reveal with a WebGL shader as you scroll, and then animate into a full-size detail view when you click.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+![Image Title](https://generative-placeholders.glitch.me/image?width=800&height=600")
 
-## 🚀 Project Structure
+[Article on Codrops](https://tympanus.net/codrops/?p=107628)
 
-Inside of your Astro project, you'll see the following folders and files:
+[Demo](https://tympanus.net/Tutorials/PixelImageGSAP/)
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
+## Commands
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
@@ -41,6 +19,16 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## Credits
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Images generated with [Midjourney](https://midjourney.com)
+
+## Misc
+
+Follow Chakib: [X](https://x.com/highpfloat), [LinkedIn](https://www.linkedin.com/in/chakib-mazouni/), [GitHub](https://github.com/J0SUKE)
+
+Follow Codrops: [X](http://www.x.com/codrops), [Facebook](https://www.facebook.com/codrops), [Instagram](https://www.instagram.com/codropsss/), [LinkedIn](https://www.linkedin.com/company/codrops/), [GitHub](https://github.com/codrops)
+
+## License
+
+[MIT](LICENSE)
