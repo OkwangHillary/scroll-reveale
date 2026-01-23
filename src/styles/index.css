@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi/Satoshi-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   font-size: 13px;
   --color-text: #000000;
@@ -22,8 +30,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-y: scroll;
-  font-family: "dm-sans", sans-serif;
-  font-style: normal;
+  font-family: 'Satoshi', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
 }
 
 a {
@@ -53,7 +61,7 @@ a {
 }
 
 .frame {
-  padding: var(--page-padding);
+  padding: 1rem var(--page-padding);
   display: grid;
   z-index: 1000;
   position: relative;
@@ -63,10 +71,10 @@ a {
   justify-items: start;
   grid-template-columns: auto auto auto 1fr;
   grid-template-areas:
-    "title title title title"
-    "back archive github ..."
-    "tags tags tags tags"
-    "sponsor sponsor sponsor sponsor";
+    'title title title title'
+    'back archive github ...'
+    'tags tags tags tags'
+    'sponsor sponsor sponsor sponsor';
 
   #cdawrap {
     justify-self: start;
@@ -111,11 +119,15 @@ a {
     grid-template-rows: auto auto;
     align-content: space-between;
     grid-template-areas:
-      "title back github archive demos"
-      "tags tags tags sponsor sponsor";
+      'title back github archive demos'
+      'tags tags tags sponsor sponsor';
 
     .frame__tags {
       align-self: end;
+    }
+
+    .frame__title {
+      padding-right: 2rem;
     }
 
     #cdawrap {
@@ -141,12 +153,13 @@ a {
 }
 
 h1 {
-  font-size: clamp(2rem, 10vw, 5rem);
+  font-size: clamp(2rem, 5vw, 5rem);
   font-weight: 400;
   text-transform: uppercase;
   line-height: 100%;
   align-self: end;
   padding-bottom: 1.5rem;
+  padding-left: 1rem;
 }
 
 .container {
@@ -161,9 +174,9 @@ h1 {
 
 .grid {
   display: grid;
-  padding: var(--page-padding);
+  padding: 10vh var(--page-padding);
   column-gap: 1rem;
-  row-gap: 10vh;
+  row-gap: 30vh;
   grid-template-columns: repeat(9, 1fr);
 }
 
@@ -171,7 +184,6 @@ h1 {
   grid-column: var(--c) / span var(--s);
   grid-row: var(--r);
   aspect-ratio: var(--ar);
-  min-height: 20vh;
 }
 
 .grid__item p {
@@ -195,8 +207,7 @@ h1 {
 .details-container {
   width: 100%;
   height: 100dvh;
-  position: relative;
-  z-index: 0;
+  overflow: hidden;
 }
 
 .details img {
@@ -212,11 +223,75 @@ h1 {
   gap: 2rem;
   padding-bottom: 0.5rem;
   align-items: end;
-  position: relative;
-  z-index: 10;
 }
 
 [data-text-animation],
 [data-icon] {
   visibility: hidden;
+}
+
+.related {
+  container-type: inline-size;
+  padding-top: 40vh;
+}
+
+.related p {
+  text-align: center;
+  padding-top: 3rem;
+}
+
+.relgrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding: 5rem var(--page-padding) 10vh;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.relgrid__item {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+}
+
+.relgrid__item-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(1) brightness(0.8);
+  transition: all 0.5s ease;
+}
+
+.relgrid__item:hover .relgrid__item-img {
+  filter: grayscale(0) brightness(1);
+}
+
+.relgrid__item-title {
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.relgrid__item:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+@container (max-width: 800px) {
+  .relgrid {
+    grid-template-columns: 1fr;
+  }
+  .relgrid__item-img {
+    display: none;
+  }
+  .relgrid__item-title {
+    padding: 0.25rem;
+    line-height: 1;
+  }
 }

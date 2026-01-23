@@ -1,161 +1,141 @@
-import gsap from "gsap"
-import { SplitText } from "gsap/SplitText"
+import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 
 interface AnimationProps {
-  element: HTMLElement
-  split: globalThis.SplitText
-  type: "vertical" | "horizontal"
-  inDuration: number
-  outDuration: number
-  inDelay?: number
-  outStagger?: number
+  element: HTMLElement;
+  split: globalThis.SplitText;
+  inDuration: number;
+  outDuration: number;
+  inDelay?: number;
+  inStagger?: number;
+  outStagger?: number;
 }
 
 export default class TextAnimation {
-  elements: HTMLElement[]
-  animations: AnimationProps[] = []
-  icon: HTMLElement | null = null
-  tweensWithScroll: gsap.core.Tween[] = []
+  elements: HTMLElement[];
+  animations: AnimationProps[] = [];
+  tweensWithScroll: gsap.core.Tween[] = [];
 
   constructor() {
-    this.init()
+    this.init();
   }
 
   init() {
-    this.animations = []
+    this.animations = [];
 
     this.elements = document.querySelectorAll(
-      "[data-text-animation]",
-    ) as unknown as HTMLElement[]
-
-    this.icon = document.querySelector("[data-icon]")
-
-    if (this.icon) gsap.set(this.icon, { opacity: 0, autoAlpha: 1 })
+      '[data-text-animation]'
+    ) as unknown as HTMLElement[];
 
     this.elements.forEach((el) => {
       const split = SplitText.create(el, {
-        type: "words, chars",
-        mask: "chars",
-      })
-
-      const type = (el.getAttribute("data-text-animation-type") ||
-        "horizontal") as "vertical" | "horizontal"
+        type: 'lines',
+        mask: 'lines',
+        autoSplit: true,
+      });
 
       const inDuration = parseFloat(
-        el.getAttribute("data-text-animation-in-duration") || "0.25",
-      )
+        el.getAttribute('data-text-animation-in-duration') || '0.75'
+      );
 
       const outDuration = parseFloat(
-        el.getAttribute("data-text-animation-out-duration") || "0.2",
-      )
+        el.getAttribute('data-text-animation-out-duration') || '0.2'
+      );
 
       const inDelay = parseFloat(
-        el.getAttribute("data-text-animation-in-delay") || "0",
-      )
+        el.getAttribute('data-text-animation-in-delay') || '0'
+      );
+
+      const inStagger = parseFloat(
+        el.getAttribute('data-text-animation-in-stagger') || '0.06'
+      );
 
       const outStagger = parseFloat(
-        el.getAttribute("data-text-animation-out-stagger") || "0.01",
-      )
+        el.getAttribute('data-text-animation-out-stagger') || '0.06'
+      );
 
-      const initialProps =
-        type === "vertical" ? { yPercent: 100 } : { xPercent: -100 }
+      const initialProps = { yPercent: 100 };
 
-      split.chars.forEach((char) => {
-        gsap.set(char, initialProps)
-      })
+      split.lines.forEach((line) => {
+        gsap.set(line, initialProps);
+      });
 
-      gsap.set(el, { autoAlpha: 1 })
+      gsap.set(el, { autoAlpha: 1 });
+
       this.animations.push({
         element: el,
         split,
-        type,
         inDuration,
         outDuration,
+        inStagger,
         outStagger,
         inDelay,
-      })
-    })
+      });
+    });
   }
 
   animateIn({ delay = 0 } = {}) {
-    const tl = gsap.timeline({ delay })
+    const tl = gsap.timeline({ delay });
 
-    if (this.icon) tl.to(this.icon, { opacity: 1, duration: 0.3 }, 0)
-
-    this.animations.forEach(({ element, split, inDuration, inDelay }) => {
-      if (element.hasAttribute("data-text-animation-on-scroll")) {
+    this.animations.forEach(
+      ({ element, split, inDuration, inStagger, inDelay }) => {
         const parentGridItem = element
-          .closest(".grid__item")
-          ?.querySelector("img")
+          .closest('.grid__item')
+          ?.querySelector('img');
 
-        const tweenWithScroll = gsap.to(split.chars, {
-          xPercent: 0,
+        const tweenWithScroll = gsap.to(split.lines, {
           yPercent: 0,
-          stagger: 0.0125,
+          stagger: inStagger,
           scrollTrigger: {
             trigger: element,
             endTrigger: parentGridItem,
-            start: "bottom bottom",
-            end: "bottom top",
-            toggleActions: "play reset restart reset",
+            start: 'top bottom',
+            end: 'bottom top',
+            toggleActions: 'play reset restart reset',
           },
-          ease: "power2.out",
+          ease: 'expo',
           duration: inDuration,
           delay: inDelay,
-        })
+        });
 
-        this.tweensWithScroll.push(tweenWithScroll)
-      } else {
-        tl.to(
-          split.chars,
-          {
-            xPercent: 0,
-            yPercent: 0,
-            stagger: 0.0125,
-            ease: "power2.out",
-            duration: inDuration,
-            delay: inDelay,
-          },
-          0,
-        )
+        this.tweensWithScroll.push(tweenWithScroll);
       }
-    })
+    );
 
-    return tl
+    return tl;
   }
 
   animateOut() {
-    const tl = gsap.timeline()
+    const tl = gsap.timeline();
 
-    if (this.icon) tl.to(this.icon, { opacity: 0, duration: 0.3 }, 0)
-
-    this.animations.forEach(({ split, type, outDuration, outStagger }) => {
-      const finalProps =
-        type === "vertical" ? { yPercent: 100 } : { xPercent: 100 }
+    this.animations.forEach(({ split, outDuration, outStagger }) => {
+      const finalProps = { yPercent: 100 };
 
       tl.to(
-        split.chars,
+        split.lines,
         {
           ...finalProps,
-          stagger: outStagger || 0.0125,
-          ease: "power2.out",
+          stagger: outStagger,
+          ease: 'power2.out',
           duration: outDuration,
         },
-        0,
-      )
-    })
+        0
+      );
+    });
 
-    return tl
+    return tl;
   }
 
   destroy() {
     this.tweensWithScroll.forEach((tween) => {
-      tween.scrollTrigger?.kill()
-      tween.kill()
-    })
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    });
 
     this.animations.forEach(({ split }) => {
-      split.revert()
-    })
+      split.revert();
+    });
+
+    this.tweensWithScroll = [];
   }
 }

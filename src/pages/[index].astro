@@ -1,7 +1,7 @@
 ---
-import Layout from "../layouts/Layout.astro"
-import medias from "../data.json"
-import Header from "../components/header.astro"
+import Layout from '../layouts/Layout.astro';
+import medias from '../data.json';
+import Header from '../components/header.astro';
 
 export const getStaticPaths = async () => {
   return medias.map((media) => {
@@ -10,17 +10,17 @@ export const getStaticPaths = async () => {
       props: {
         media,
       },
-    }
-  })
-}
+    };
+  });
+};
 
-const { media } = Astro.props
+const { media } = Astro.props;
 ---
 
 <Layout uid={`detail-${media.index}`} template="detail">
   <Header />
   <div class="details">
-    <div class="details-data" data-text-animation>
+    <div class="details-data">
       <a href="/">← Index</a>
       <p>{media.data}</p>
       <p>{media.location}</p>

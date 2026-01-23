@@ -1,7 +1,7 @@
 ---
-import "../styles/index.css"
+import '../styles/index.css';
 
-const { uid, template } = Astro.props
+const { uid, template } = Astro.props;
 ---
 
 <!doctype html>
@@ -9,11 +9,15 @@ const { uid, template } = Astro.props
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="https://tympanus.net/favicon/favicon.svg" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="https://tympanus.net/favicon/favicon.svg"
+    />
     <link rel="shortcut icon" href="https://tympanus.net/favicon/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <link rel="stylesheet" href="https://use.typekit.net/gwa0xin.css" />
-    <title>Pixelated Image Effect on Scroll with GSAP and Three.js</title>
+    <title>WebGL Pixel Effect on Scroll with GSAP, Three.js and Astro</title>
   </head>
   <body data-barba="wrapper">
     <div id="app" data-barba="container" data-barba-namespace={uid}>
