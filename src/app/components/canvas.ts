@@ -4,6 +4,7 @@ import { Dimensions, Size } from "../types/types"
 import vertexShader from "../shaders/vertex.glsl"
 import fragmentShader from "../shaders/fragment.glsl"
 import Media from "./media"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 
 export default class Canvas {
   element: HTMLCanvasElement
@@ -37,7 +38,7 @@ export default class Canvas {
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      100
+      100,
     )
     this.scene.add(this.camera)
     this.camera.position.z = 10
@@ -80,6 +81,8 @@ export default class Canvas {
   }
 
   onResize() {
+    ScrollTrigger.refresh()
+
     this.dimensions = {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -101,7 +104,7 @@ export default class Canvas {
   createDebugMesh() {
     const mesh = new THREE.Mesh(
       new THREE.PlaneGeometry(5, 5),
-      new THREE.ShaderMaterial({ vertexShader, fragmentShader })
+      new THREE.ShaderMaterial({ vertexShader, fragmentShader }),
     )
 
     this.scene.add(mesh)
