@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/satoshi/Satoshi-Variable.ttf') format('truetype');
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi/Satoshi-Variable.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -30,8 +30,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-y: scroll;
-  font-family: 'Satoshi', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
-    'Liberation Sans', sans-serif;
+  font-family:
+    "Satoshi",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    "Liberation Sans",
+    sans-serif;
 }
 
 a {
@@ -71,10 +80,10 @@ a {
   justify-items: start;
   grid-template-columns: auto auto auto 1fr;
   grid-template-areas:
-    'title title title title'
-    'back archive github ...'
-    'tags tags tags tags'
-    'sponsor sponsor sponsor sponsor';
+    "title title title title"
+    "back archive github ..."
+    "tags tags tags tags"
+    "sponsor sponsor sponsor sponsor";
 
   #cdawrap {
     justify-self: start;
@@ -119,8 +128,8 @@ a {
     grid-template-rows: auto auto;
     align-content: space-between;
     grid-template-areas:
-      'title back github archive demos'
-      'tags tags tags sponsor sponsor';
+      "title back github archive demos"
+      "tags tags tags sponsor sponsor";
 
     .frame__tags {
       align-self: end;
