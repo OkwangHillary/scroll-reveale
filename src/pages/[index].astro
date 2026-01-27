@@ -20,7 +20,7 @@ const { media } = Astro.props;
 <Layout uid={`detail-${media.index}`} template="detail">
   <Header />
   <div class="details">
-    <div class="details-data">
+    <div data-text-animation class="details-data">
       <a href="/">← Index</a>
       <p>{media.data}</p>
       <p>{media.location}</p>

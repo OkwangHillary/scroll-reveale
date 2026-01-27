@@ -1,139 +1,185 @@
-import gsap from "gsap"
-import { SplitText } from "gsap/SplitText"
+import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 
-interface AnimationProps {
-  element: HTMLElement
-  split: globalThis.SplitText
-  inDuration: number
-  outDuration: number
-  inDelay?: number
-  inStagger?: number
-  outStagger?: number
+interface BaseAnimationProps {
+  element: HTMLElement;
+  inDuration: number;
+  outDuration: number;
+  inDelay?: number;
+}
+
+interface SplitAnimationProps extends BaseAnimationProps {
+  split: globalThis.SplitText;
+  inStagger?: number;
+  outStagger?: number;
 }
 
 export default class TextAnimation {
-  elements: HTMLElement[]
-  animations: AnimationProps[] = []
-  tweensWithScroll: gsap.core.Tween[] = []
+  elements: HTMLElement[];
+  splitAnimations: SplitAnimationProps[] = [];
+  fadeAnimations: BaseAnimationProps[] = [];
+  splitTweens: gsap.core.Tween[] = [];
+  fadeTweens: gsap.core.Tween[] = [];
 
   constructor() {}
 
   init() {
-    this.animations = []
+    this.splitAnimations = [];
+    this.fadeAnimations = [];
 
     this.elements = document.querySelectorAll(
-      "[data-text-animation]",
-    ) as unknown as HTMLElement[]
+      '[data-text-animation]'
+    ) as unknown as HTMLElement[];
 
     this.elements.forEach((el) => {
-      const split = SplitText.create(el, {
-        type: "lines",
-        mask: "lines",
-        autoSplit: true,
-      })
-
       const inDuration = parseFloat(
-        el.getAttribute("data-text-animation-in-duration") || "0.75",
-      )
+        el.getAttribute('data-text-animation-in-duration') || '0.6'
+      );
 
       const outDuration = parseFloat(
-        el.getAttribute("data-text-animation-out-duration") || "0.2",
-      )
+        el.getAttribute('data-text-animation-out-duration') || '0.3'
+      );
 
       const inDelay = parseFloat(
-        el.getAttribute("data-text-animation-in-delay") || "0",
-      )
+        el.getAttribute('data-text-animation-in-delay') || '0'
+      );
 
-      const inStagger = parseFloat(
-        el.getAttribute("data-text-animation-in-stagger") || "0.06",
-      )
+      // Check if this should be a split text animation
+      if (el.hasAttribute('data-text-animation-split')) {
+        const split = SplitText.create(el, {
+          type: 'lines',
+          mask: 'lines',
+          autoSplit: true,
+        });
 
-      const outStagger = parseFloat(
-        el.getAttribute("data-text-animation-out-stagger") || "0.06",
-      )
+        const inStagger = parseFloat(
+          el.getAttribute('data-text-animation-in-stagger') || '0.06'
+        );
 
-      const initialProps = { yPercent: 100 }
+        const outStagger = parseFloat(
+          el.getAttribute('data-text-animation-out-stagger') || '0.06'
+        );
 
-      split.lines.forEach((line) => {
-        gsap.set(line, initialProps)
-      })
+        split.lines.forEach((line) => {
+          gsap.set(line, { yPercent: 100 });
+        });
 
-      gsap.set(el, { autoAlpha: 1 })
+        gsap.set(el, { autoAlpha: 1, visibility: 'visible' });
 
-      this.animations.push({
-        element: el,
-        split,
-        inDuration,
-        outDuration,
-        inStagger,
-        outStagger,
-        inDelay,
-      })
-    })
+        this.splitAnimations.push({
+          element: el,
+          split,
+          inDuration,
+          outDuration,
+          inStagger,
+          outStagger,
+          inDelay,
+        });
+      } else {
+        // Default fade animation
+        gsap.set(el, { autoAlpha: 0, visibility: 'hidden' });
+
+        this.fadeAnimations.push({
+          element: el,
+          inDuration,
+          outDuration,
+          inDelay,
+        });
+      }
+    });
   }
 
   animateIn({ delay = 0 } = {}) {
-    const tl = gsap.timeline({ delay })
-
-    this.animations.forEach(
+    // Split text animations
+    this.splitAnimations.forEach(
       ({ element, split, inDuration, inStagger, inDelay }) => {
-        const parentGridItem = element
-          .closest(".grid__item")
-          ?.querySelector("img")
-
         const tweenWithScroll = gsap.to(split.lines, {
           yPercent: 0,
           stagger: inStagger,
           scrollTrigger: {
             trigger: element,
-            endTrigger: parentGridItem,
-            start: "top bottom",
-            end: "bottom top",
-            toggleActions: "play reset restart reset",
+            start: 'top bottom',
+            end: 'bottom top',
+            toggleActions: 'play reset restart reset',
           },
-          ease: "expo",
+          ease: 'expo',
           duration: inDuration,
-          delay: inDelay,
-        })
+          delay: inDelay + delay,
+        });
 
-        this.tweensWithScroll.push(tweenWithScroll)
-      },
-    )
+        this.splitTweens.push(tweenWithScroll);
+      }
+    );
 
-    return tl
+    // Fade animations
+    this.fadeAnimations.forEach(({ element, inDuration, inDelay }) => {
+      const fadeTween = gsap.to(element, {
+        autoAlpha: 1,
+        scrollTrigger: {
+          trigger: element,
+          start: 'top bottom',
+          end: 'bottom top',
+          toggleActions: 'play reset restart reset',
+        },
+        ease: 'power2.out',
+        duration: inDuration,
+        delay: inDelay + delay,
+      });
+
+      this.fadeTweens.push(fadeTween);
+    });
+    return gsap.timeline();
   }
 
   animateOut() {
-    const tl = gsap.timeline()
+    const tl = gsap.timeline();
 
-    this.animations.forEach(({ split, outDuration, outStagger }) => {
-      const finalProps = { yPercent: 100 }
-
+    // Split animations
+    this.splitAnimations.forEach(({ split, outDuration, outStagger }) => {
       tl.to(
         split.lines,
         {
-          ...finalProps,
+          yPercent: 100,
           stagger: outStagger,
-          ease: "power2.out",
+          ease: 'power2.out',
           duration: outDuration,
         },
-        0,
-      )
-    })
+        0
+      );
+    });
 
-    return tl
+    // Fade animations
+    this.fadeAnimations.forEach(({ element, outDuration }) => {
+      tl.to(
+        element,
+        {
+          autoAlpha: 0,
+          ease: 'power2.out',
+          duration: outDuration,
+        },
+        0
+      );
+    });
+
+    return tl;
   }
 
   destroy() {
-    this.tweensWithScroll.forEach((tween) => {
-      tween.scrollTrigger?.kill()
-      tween.kill()
-    })
+    this.splitTweens.forEach((tween) => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    });
 
-    this.animations.forEach(({ split }) => {
-      split.revert()
-    })
+    this.fadeTweens.forEach((tween) => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    });
 
-    this.tweensWithScroll = []
+    this.splitAnimations.forEach(({ split }) => {
+      split.revert();
+    });
+
+    this.splitTweens = [];
+    this.fadeTweens = [];
   }
 }
