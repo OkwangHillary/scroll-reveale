@@ -12,7 +12,6 @@ import Media from './components/media';
 import { SplitText } from 'gsap/SplitText';
 import TextAnimation from './components/text-animation';
 import FontFaceObserver from 'fontfaceobserver';
-import { log } from 'three';
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, Flip, SplitText);
 
@@ -126,7 +125,7 @@ class App {
             this.loadImages(() => {
               this.canvas.medias = [];
               this.canvas.createMedias();
-              this.textAnimation.animateIn();
+              this.textAnimation.animateIn({ delay: 0.3 });
             });
           },
         },
@@ -134,9 +133,7 @@ class App {
           name: 'home-detail',
           from: {
             custom: () => {
-              const activeLink = document.querySelector(
-                'a[data-home-link-active="true"]'
-              );
+              const activeLink = document.querySelector('a[data-home-link-active="true"]');
               if (!activeLink) return false;
 
               return true;
@@ -148,9 +145,7 @@ class App {
 
             const tl = this.textAnimation.animateOut();
 
-            activeLinkImage = document.querySelector(
-              'a[data-home-link-active="true"] img'
-            ) as HTMLImageElement;
+            activeLinkImage = document.querySelector('a[data-home-link-active="true"] img') as HTMLImageElement;
 
             this.canvas.medias?.forEach((media) => {
               if (!media) return;
@@ -201,9 +196,7 @@ class App {
           leave: () => {
             scrollTop = this.scroll.getScroll();
 
-            const container = document.querySelector(
-              '.container'
-            ) as HTMLElement;
+            const container = document.querySelector('.container') as HTMLElement;
             container.style.position = 'fixed';
             container.style.top = `-${scrollTop}px`;
             container.style.width = '100%';
@@ -220,9 +213,7 @@ class App {
             this.scroll.init();
             this.textAnimation.init();
 
-            const detailContainer = document.querySelector(
-              '.details-container'
-            ) as HTMLElement;
+            const detailContainer = document.querySelector('.details-container') as HTMLElement;
 
             detailContainer.innerHTML = '';
             detailContainer.append(activeLinkImage);
@@ -233,7 +224,7 @@ class App {
             return new Promise<void>((resolve) => {
               let activeMedia: Media | null = null;
 
-              this.textAnimation.animateIn({ delay: 0.5 });
+              this.textAnimation.animateIn({ delay: 0.3 });
 
               Flip.from(this.mediaHomeState, {
                 absolute: true,
@@ -269,9 +260,7 @@ class App {
   }
 
   getCurrentTemplate() {
-    return document
-      .querySelector('[data-page-template]')
-      ?.getAttribute('data-page-template') as 'home' | 'detail';
+    return document.querySelector('[data-page-template]')?.getAttribute('data-page-template') as 'home' | 'detail';
   }
 
   setTemplate(template: string) {

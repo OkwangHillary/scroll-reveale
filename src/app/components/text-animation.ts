@@ -5,7 +5,7 @@ interface BaseAnimationProps {
   element: HTMLElement;
   inDuration: number;
   outDuration: number;
-  inDelay?: number;
+  inDelay: number;
 }
 
 interface SplitAnimationProps extends BaseAnimationProps {
@@ -27,22 +27,14 @@ export default class TextAnimation {
     this.splitAnimations = [];
     this.fadeAnimations = [];
 
-    this.elements = document.querySelectorAll(
-      '[data-text-animation]'
-    ) as unknown as HTMLElement[];
+    this.elements = document.querySelectorAll('[data-text-animation]') as unknown as HTMLElement[];
 
     this.elements.forEach((el) => {
-      const inDuration = parseFloat(
-        el.getAttribute('data-text-animation-in-duration') || '0.6'
-      );
+      const inDuration = parseFloat(el.getAttribute('data-text-animation-in-duration') || '0.6');
 
-      const outDuration = parseFloat(
-        el.getAttribute('data-text-animation-out-duration') || '0.3'
-      );
+      const outDuration = parseFloat(el.getAttribute('data-text-animation-out-duration') || '0.3');
 
-      const inDelay = parseFloat(
-        el.getAttribute('data-text-animation-in-delay') || '0'
-      );
+      const inDelay = parseFloat(el.getAttribute('data-text-animation-in-delay') || '0');
 
       // Check if this should be a split text animation
       if (el.hasAttribute('data-text-animation-split')) {
@@ -52,13 +44,9 @@ export default class TextAnimation {
           autoSplit: true,
         });
 
-        const inStagger = parseFloat(
-          el.getAttribute('data-text-animation-in-stagger') || '0.06'
-        );
+        const inStagger = parseFloat(el.getAttribute('data-text-animation-in-stagger') || '0.06');
 
-        const outStagger = parseFloat(
-          el.getAttribute('data-text-animation-out-stagger') || '0.06'
-        );
+        const outStagger = parseFloat(el.getAttribute('data-text-animation-out-stagger') || '0.06');
 
         split.lines.forEach((line) => {
           gsap.set(line, { yPercent: 100 });
@@ -91,25 +79,23 @@ export default class TextAnimation {
 
   animateIn({ delay = 0 } = {}) {
     // Split text animations
-    this.splitAnimations.forEach(
-      ({ element, split, inDuration, inStagger, inDelay }) => {
-        const tweenWithScroll = gsap.to(split.lines, {
-          yPercent: 0,
-          stagger: inStagger,
-          scrollTrigger: {
-            trigger: element,
-            start: 'top bottom',
-            end: 'bottom top',
-            toggleActions: 'play reset restart reset',
-          },
-          ease: 'expo',
-          duration: inDuration,
-          delay: inDelay + delay,
-        });
+    this.splitAnimations.forEach(({ element, split, inDuration, inStagger, inDelay }) => {
+      const tweenWithScroll = gsap.to(split.lines, {
+        yPercent: 0,
+        stagger: inStagger,
+        scrollTrigger: {
+          trigger: element,
+          start: 'top bottom',
+          end: 'bottom top',
+          toggleActions: 'play reset restart reset',
+        },
+        ease: 'expo',
+        duration: inDuration,
+        delay: inDelay + delay,
+      });
 
-        this.splitTweens.push(tweenWithScroll);
-      }
-    );
+      this.splitTweens.push(tweenWithScroll);
+    });
 
     // Fade animations
     this.fadeAnimations.forEach(({ element, inDuration, inDelay }) => {
