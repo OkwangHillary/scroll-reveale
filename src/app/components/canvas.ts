@@ -1,8 +1,6 @@
 import * as THREE from "three"
 import { Dimensions, Size } from "../types/types"
 
-import vertexShader from "../shaders/vertex.glsl"
-import fragmentShader from "../shaders/fragment.glsl"
 import Media from "./media"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
@@ -13,15 +11,11 @@ export default class Canvas {
   renderer: THREE.WebGLRenderer
   sizes: Size
   dimensions: Dimensions
-  time: number
-  clock: THREE.Clock
   medias: (Media | null)[] | null
 
   constructor() {
     this.element = document.getElementById("webgl") as HTMLCanvasElement
-    this.time = 0
     this.medias = []
-    this.createClock()
     this.createScene()
     this.createCamera()
     this.createRenderer()
@@ -72,10 +66,6 @@ export default class Canvas {
     }
   }
 
-  createClock() {
-    this.clock = new THREE.Clock()
-  }
-
   addEventListeners() {
     window.addEventListener("resize", this.onResize.bind(this))
   }
@@ -99,19 +89,6 @@ export default class Canvas {
     this.medias?.forEach((media) => {
       media?.onResize(this.sizes)
     })
-  }
-
-  createDebugMesh() {
-    const mesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(5, 5),
-      new THREE.ShaderMaterial({ vertexShader, fragmentShader }),
-    )
-
-    this.scene.add(mesh)
-  }
-
-  getTime() {
-    return this.time
   }
 
   createMedias(activeElement?: HTMLImageElement) {
@@ -146,8 +123,6 @@ export default class Canvas {
   }
 
   render(scroll: number, updateScroll: boolean = true) {
-    this.time = this.clock.getElapsedTime()
-
     this.medias?.forEach((media) => {
       if (updateScroll) {
         media?.updateScroll(scroll)
