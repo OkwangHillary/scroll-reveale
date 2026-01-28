@@ -110,18 +110,6 @@ export default class Canvas {
     })
   }
 
-  onPageChange(template: string) {
-    if (template === "home") {
-      this.createMedias()
-    } else {
-      this.medias?.forEach((media) => {
-        media?.destroy()
-        media = null
-      })
-      this.medias = null
-    }
-  }
-
   render(scroll: number, updateScroll: boolean = true) {
     this.medias?.forEach((media) => {
       if (updateScroll) {
