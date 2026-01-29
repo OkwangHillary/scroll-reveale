@@ -35,7 +35,7 @@ class App {
     this.canvas = new Canvas();
     this.textAnimation = new TextAnimation();
     this.loadFont(() => {
-      //this.textAnimation.init();
+      this.textAnimation.init();
     });
 
     this.template = this.getCurrentTemplate();
