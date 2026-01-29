@@ -2,7 +2,7 @@
 
 Animated, multi-page gallery where images reveal with a WebGL shader as you scroll, and then animate into a full-size detail view when you click.
 
-![Image Title](https://tympanus.net/codrops/wp-content/uploads/2026/01/pixel_featured.webpp)
+![Image Title](https://tympanus.net/codrops/wp-content/uploads/2026/01/pixel_featured.webp)
 
 [Article on Codrops](https://tympanus.net/codrops/?p=107628)
 
